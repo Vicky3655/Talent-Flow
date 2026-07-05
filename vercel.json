@@ -1,9 +1,0 @@
-{
-  "rewrites": [
-    { 
-      "source": "/(.*)", 
-      "destination": "/index.html" 
-    }
-  ]
-}
-https://www.youtube.com/watch?v=iCOKS0XTizw
