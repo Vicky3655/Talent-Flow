@@ -672,7 +672,7 @@ nav {
 }
 
 /* ── Tablet / Mobile ── */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
 
     /* Nav */
     nav { padding: 0 16px; height: 56px; }
