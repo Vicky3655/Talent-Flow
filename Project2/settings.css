@@ -378,10 +378,77 @@ nav {
 }
 
 @media (max-width: 640px) {
-    .content { margin-left: 0; padding: 80px 16px 24px; }
-    .sidebar { width: 100%; height: 56px; top: auto; bottom: 0; flex-direction: row; padding: 0 8px; gap: 0; justify-content: space-around; }
-    .sidebar-link::after { display: none; }
+    /* Adjusted bottom padding to prevent content from hiding behind the navigation bar */
+    .content { 
+        margin-left: 0; 
+        padding: 80px 16px 88px; 
+    }
+
+    /* Bottom Nav Bar (Rounded style matching the other pages) */
+    .sidebar {
+        top: auto; 
+        left: 0; 
+        bottom: 0; 
+        right: 0;
+        width: 100%; 
+        height: 62px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+        padding: 0 8px; 
+        gap: 0;
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -4px 24px rgba(37, 99, 235, 0.22);
+        background: #2563EB;
+    }
+
+    /* Individual Tab Links */
+    .sidebar-link {
+        flex: 1; 
+        height: 50px;
+        flex-direction: column;
+        gap: 3px;
+        border-radius: 12px;
+        color: rgba(255, 255, 255, 0.7);
+        transition: background 0.2s, color 0.2s;
+    }
+
+    .sidebar-link svg { 
+        width: 22px; 
+        height: 22px; 
+    }
+
+    /* Convert desktop tooltips to visible bottom labels on mobile */
+    .sidebar-link::before {
+        content: attr(data-tip);
+        font-size: 10px; 
+        font-weight: 600;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        line-height: 1; 
+        order: 2; 
+        opacity: 0.8;
+        transition: opacity 0.2s;
+    }
+
+    .sidebar-link::after { 
+        display: none; /* Hide standard desktop hover tooltips */
+    }
+
+    .sidebar-link.active::before,
+    .sidebar-link:hover::before {
+        opacity: 1;
+    }
+
+    .sidebar-link:hover,
+    .sidebar-link.active {
+        background-color: rgba(255, 255, 255, 0.15);
+        color: #FFFFFF;
+    }
+
     nav { padding: 12px 16px; }
+    .field-row { flex-direction: column; gap: 6px; }
+    .field-row label { width: auto; padding-top: 0; }
+    .profile-name { font-size: 22px; }
     .field-row { flex-direction: column; gap: 6px; }
     .field-row label { width: auto; padding-top: 0; }
     .profile-name { font-size: 22px; }
