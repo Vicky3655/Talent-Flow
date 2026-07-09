@@ -9,7 +9,7 @@
     --green:     #16A34A;
     --green-l:   #F0FDF4;
     --orange:    #EA580C;
-    --purple:    #7C3AED;
+    --purple: #7C3AED;
     --red:       #DC2626;
     --red-l:     #FEF2F2;
     --amber:     #D97706;
@@ -74,7 +74,52 @@ nav {
     border: 2px solid var(--slate-2);
 }
 
-/* hamburger-btn styled by mobile-nav.css */
+/* ─── HAMBURGER MENU BUTTON ─── */
+.hamburger-btn {
+    display: none !important;
+    width: 42px;
+    height: 42px;
+    background: rgba(37, 99, 235, .07);
+    border: 1.5px solid rgba(37, 99, 235, .18);
+    border-radius: 12px;
+    cursor: pointer;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+    transition: background .2s, border-color .2s, box-shadow .2s, transform .12s;
+}
+
+.hamburger-btn:hover {
+    background: rgba(37, 99, 235, .14);
+    border-color: rgba(37, 99, 235, .35);
+    box-shadow: 0 2px 14px rgba(37, 99, 235, .22);
+}
+.hamburger-btn:active { transform: scale(.92); }
+.hamburger-btn.open {
+    background: rgba(37, 99, 235, .18);
+    border-color: rgba(37, 99, 235, .45);
+    box-shadow: 0 2px 14px rgba(37, 99, 235, .28);
+}
+
+.hb-bar {
+    display: block;
+    height: 2px;
+    background: #334155;
+    border-radius: 2px;
+    transform-origin: center;
+    transition: transform .38s cubic-bezier(.4, 0, .2, 1), opacity .22s, width .22s;
+}
+.hb-top { width: 20px; }
+.hb-mid { width: 13px; align-self: flex-end; margin-right: 4px; }
+.hb-bot { width: 20px; }
+
+.hamburger-btn.open .hb-top { transform: translateY(7px) rotate(45deg); width: 20px; }
+.hamburger-btn.open .hb-mid { opacity: 0; width: 0; }
+.hamburger-btn.open .hb-bot { transform: translateY(-7px) rotate(-45deg); width: 20px; }
 
 /* ══ SIDEBAR ══════════════════════════════════════════════════ */
 .sidebar {
@@ -598,6 +643,24 @@ nav {
 }
 
 @media (max-width: 768px) {
+    nav {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+        height: 56px !important;
+    }
+    .logo span { font-size: 16px; }
+    .logo svg  { width: 26px; height: 26px; }
+
+    .nav-right { gap: 10px !important; }
+    .nav-icon-btn { padding: 6px; }
+    .nav-role { display: none !important; } /* Prevents overlapping navigation items on mobile */
+    .avatar img { width: 32px; height: 32px; }
+
+    /* Enable hamburger button in mobile layout */
+    .hamburger-btn {
+        display: flex !important;
+    }
+
     .content { padding: 24px 16px 60px; }
     /* hamburger & sidebar handled by mobile-nav.css */
     .summary-cards { grid-template-columns: 1fr 1fr; gap: 12px; }
