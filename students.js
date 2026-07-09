@@ -1,11 +1,3 @@
-
---- START OF FILE text/javascript ---
-
-/* ═══════════════════════════════════════════
-   TALENT FLOW — Students
-   students.js
-═══════════════════════════════════════════ */
-
 /* ─── SAMPLE DATA ─────────────────────── */
 const STUDENTS = [];
 /* ─── AVATAR COLOUR PALETTE ───────────── */
@@ -295,7 +287,7 @@ document.querySelectorAll('.th[data-sort]').forEach(th => {
 
 /* ─── SEARCH ──────────────────────────── */
 searchInput.addEventListener('input', () => {
-    searchQuery = searchQuery.trim(); // safety trim
+    searchQuery = searchQuery.trim();
     currentPage = 1;
     render();
 });
@@ -318,43 +310,22 @@ viewGridBtn.addEventListener('click', () => {
     render();
 });
 
-/* ─── INVITE BUTTON (placeholder) ─────── */
-/* inviteBtn click handled by invite modal IIFE */
-
 /* ─── INIT ────────────────────────────── */
 renderStatCards();
 populateCourseFilter();
 render();
 
-/* ═══════════════════════════════════════════════════════
-   EMAILJS CONFIG
-   ─────────────────────────────────────────────────────
-   1. Sign up free at https://emailjs.com
-   2. Add an Email Service (Gmail, Outlook, etc.)
-   3. Create an Email Template with these variables:
-        {{to_name}}          — recipient's name
-        {{to_email}}         — recipient's address
-        {{from_name}}        — your name
-        {{courses}}          — enrolled course list
-        {{personal_message}} — your optional message
-        {{invite_link}}      — the join URL
-   4. Paste your credentials below
-   ─────────────────────────────────────────────────────
-   Leave as 'YOUR_…' to run in demo mode (simulated send)
-═══════════════════════════════════════════════════════ */
-const EJS_KEY      = 'YOUR_PUBLIC_KEY';   // Account → API Keys
-const EJS_SERVICE  = 'service_f4dl4md';   // Email Services tab
-const EJS_TEMPLATE = 'YOUR_TEMPLATE_ID';  // Email Templates tab
+const EJS_KEY      = 'YOUR_PUBLIC_KEY';
+const EJS_SERVICE  = 'service_f4dl4md';
+const EJS_TEMPLATE = 'YOUR_TEMPLATE_ID';
 const SENDER_NAME  = 'CHIME VICTOR CHINAGOROM';
 const SENDER_EMAIL = 'victrends365@gmail.com';
 const BASE_LINK    = 'https://talentflow.app/join/';
 
 /* ─── INVITE MODAL ────────────────────── */
 (function () {
-
     const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-    /* ── Elements ── */
     const overlay        = document.getElementById('inviteOverlay');
     const btnOpen        = document.getElementById('inviteBtn');
     const btnClose       = document.getElementById('modalClose');
@@ -382,14 +353,12 @@ const BASE_LINK    = 'https://talentflow.app/join/';
     const btnDone        = document.getElementById('btnDone');
     const modalTabsEl    = document.querySelector('.modal-tabs');
 
-    /* ── State ── */
     let chips               = [];
     let activeTab           = 'email';
     let emailCourseSelected = [];
     let linkCourseSelected  = [];
     let isSending           = false;
 
-    /* ── Open / close ── */
     function openModal() {
         resetModal();
         overlay.classList.add('open');
@@ -412,7 +381,6 @@ const BASE_LINK    = 'https://talentflow.app/join/';
         if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
     });
 
-    /* ── Reset ── */
     function resetModal() {
         chips = []; activeTab = 'email';
         emailCourseSelected = []; linkCourseSelected = [];
@@ -443,7 +411,6 @@ const BASE_LINK    = 'https://talentflow.app/join/';
         updateSendBtn();
     }
 
-    /* ── Tabs ── */
     tabs.forEach(tab => tab.addEventListener('click', () => switchTab(tab.dataset.tab)));
 
     function switchTab(name) {
@@ -454,7 +421,6 @@ const BASE_LINK    = 'https://talentflow.app/join/';
         updateSendBtn();
     }
 
-    /* ── Chip input ── */
     function isValidEmail(v) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
     }
@@ -513,7 +479,6 @@ const BASE_LINK    = 'https://talentflow.app/join/';
     });
     chipInput.addEventListener('click', () => emailTyping.focus());
 
-    /* ── Course checkboxes ── */
     function buildCourseChecks(container, selectedArr) {
         container.innerHTML = COURSES.map((name, i) => `
             <label class="course-check-item${selectedArr.includes(i) ? ' checked' : ''}" data-idx="${i}">
@@ -544,7 +509,6 @@ const BASE_LINK    = 'https://talentflow.app/join/';
     buildCourseChecks(emailChecks, emailCourseSelected);
     buildCourseChecks(linkChecks,  linkCourseSelected);
 
-    /* ── Send button label ── */
     function updateSendBtn() {
         if (activeTab === 'email') {
             const n = chips.length;
@@ -558,7 +522,6 @@ const BASE_LINK    = 'https://talentflow.app/join/';
         }
     }
 
-    /* ── Progress list ── */
     function buildProgressList(emailList) {
         progressList.innerHTML = emailList.map(email => `
             <div class="pi-row" data-email="${email.replace(/"/g,'&quot;')}">
@@ -614,7 +577,6 @@ const BASE_LINK    = 'https://talentflow.app/join/';
         }
     }
 
-    /* ── Core async send ── */
     async function doSendEmails() {
         if (emailTyping.value.trim()) addChip(emailTyping.value);
         if (chips.length === 0) return;
@@ -627,7 +589,6 @@ const BASE_LINK    = 'https://talentflow.app/join/';
         const inviteToken = Math.random().toString(36).slice(2, 10);
         const inviteLink  = BASE_LINK + 'inv_' + inviteToken;
 
-        /* Switch to progress view */
         panelEmail.classList.add('hidden');
         modalTabsEl.style.display = 'none';
         progressPanel.classList.remove('hidden');
@@ -652,7 +613,7 @@ const BASE_LINK    = 'https://talentflow.app/join/';
 
             try {
                 if (isDemo) {
-                    await sleep(800 + Math.random() * 600);   // simulate network latency
+                    await sleep(800 + Math.random() * 600);
                 } else {
                     await emailjs.send(EJS_SERVICE, EJS_TEMPLATE, {
                         to_name:          email.split('@')[0],
@@ -675,7 +636,6 @@ const BASE_LINK    = 'https://talentflow.app/join/';
             }
         }
 
-        /* Final heading */
         isSending = false;
         if (failCount === 0) {
             setProgressHead(
@@ -691,13 +651,11 @@ const BASE_LINK    = 'https://talentflow.app/join/';
             setProgressHead(`${sentCount} sent, ${failCount} failed`, 'Some invites could not be delivered.', 'check');
         }
 
-        /* Restore footer — Send button becomes Close */
         footerWrap.style.display = '';
         btnSend.style.display    = 'none';
         btnCancel.textContent    = 'Close';
     }
 
-    /* ── Button handler ── */
     btnSend.addEventListener('click', async () => {
         if (activeTab === 'email') {
             await doSendEmails();
@@ -709,7 +667,6 @@ const BASE_LINK    = 'https://talentflow.app/join/';
         }
     });
 
-    /* ── Copy link ── */
     copyLinkBtn.addEventListener('click', () => {
         const link = document.getElementById('inviteLink').textContent;
         navigator.clipboard.writeText(link).catch(() => {});
@@ -717,5 +674,4 @@ const BASE_LINK    = 'https://talentflow.app/join/';
         copyLinkBtn.classList.add('copied');
         setTimeout(() => { copyBtnText.textContent = 'Copy'; copyLinkBtn.classList.remove('copied'); }, 2000);
     });
-
 })();
