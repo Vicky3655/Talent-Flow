@@ -1,3 +1,6 @@
+
+--- START OF FILE text/javascript ---
+
 /* ═══════════════════════════════════════════
    TALENT FLOW — Students
    students.js
@@ -292,7 +295,7 @@ document.querySelectorAll('.th[data-sort]').forEach(th => {
 
 /* ─── SEARCH ──────────────────────────── */
 searchInput.addEventListener('input', () => {
-    searchQuery = searchInput.value;
+    searchQuery = searchQuery.trim(); // safety trim
     currentPage = 1;
     render();
 });
