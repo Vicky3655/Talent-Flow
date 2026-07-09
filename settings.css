@@ -7,49 +7,17 @@ body {
     min-height: 100vh;
 }
 
-/* ── NAV ── */
-nav.app-nav,
+/* Hide global layout nav if loaded on settings page to match clean look */
 nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 32px;
-    background: #F8FAFC;
-    border-bottom: 1px solid #E2E8F0;
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    height: 64px;
-    z-index: 100;
+    display: none !important;
 }
 
-.logo {
-    display: flex; align-items: center; gap: 10px;
-    color: #2563EB; font-weight: 700; font-size: 18px;
-}
-
-.nav-right { display: flex; align-items: center; gap: 14px; }
-
-.nav-role { font-weight: 500; font-size: 15px; color: #0F172A; }
-
-.nav-icon-btn {
-    background: none; border: none; cursor: pointer;
-    color: #0F172A; display: flex; align-items: center;
-}
-
-.nav-icon-btn svg { width: 24px; height: 24px; }
-
-.avatar img {
-    width: 40px; height: 40px;
-    border-radius: 50%; object-fit: cover; cursor: pointer;
-    background: #EFF6FF; /* soft circle before a photo loads */
-}
-
-/* ── SIDEBAR ── */
+/* ── SIDEBAR (Desktop Left Nav) ── */
 .sidebar {
     position: fixed;
-    top: 64px; left: 0;
-    width: 68px;
-    height: calc(100vh - 64px);
+    top: 0; left: 0;
+    width: 80px;
+    height: 100vh;
     background: #2563EB;
     display: flex; flex-direction: column;
     align-items: center; padding-top: 28px;
@@ -57,25 +25,26 @@ nav {
 }
 
 .sidebar-link {
-    color: rgba(255,255,255,0.6);
+    color: rgba(255, 255, 255, 0.7);
     display: flex; align-items: center; justify-content: center;
-    width: 46px; height: 46px;
+    width: 44px; height: 44px;
     border-radius: 10px;
     text-decoration: none;
     transition: background 0.2s, color 0.2s;
     position: relative;
 }
 
-.sidebar-link svg { width: 25px; height: 25px; }
+.sidebar-link svg { width: 26px; height: 26px; }
 
-.sidebar-link:hover,
-.sidebar-link.active {
-    background: rgba(255,255,255,0.18);
-    color: #fff;
+.sidebar-link:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #FFFFFF;
 }
+
 .sidebar-link.active {
-    background: rgba(255,255,255,.22);
-    box-shadow: 0 0 0 1.5px rgba(255,255,255,.35);
+    background-color: rgba(255, 255, 255, 0.22);
+    color: #FFFFFF;
+    box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.35);
 }
 
 .sidebar-link::after {
@@ -90,50 +59,36 @@ nav {
 
 .sidebar-link:hover::after { opacity: 1; }
 
-/* ── MAIN CONTENT ── */
-.content {
-    margin-left: 68px;
-    margin-top: 64px;
-    padding: 36px 44px;
-    background: #FFFFFF;
-    min-height: calc(100vh - 64px);
-}
-
-.page-title {
-    font-size: 26px; font-weight: 700;
-    margin-bottom: 28px;
-}
-
-/* ── SETTINGS LAYOUT ── */
-.settings-layout {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-}
-
-/* ── SETTINGS LEFT NAV ── */
+/* ── SETTINGS SUB-NAV (Horizontal Tab Menu) ── */
 .settings-nav {
-    width: 100%;
-    background: #F1F5F9;
-    border-radius: 14px;
-    padding: 12px 16px;
+    position: fixed;
+    top: 0;
+    left: 80px;
+    right: 0;
+    height: 56px;
+    background: #EFF6FF;
+    border-bottom: 1px solid #E2E8F0;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 8px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 32px;
+    z-index: 98;
 }
 
 .settings-nav-btn {
-    text-align: left;
-    padding: 10px 18px;
-    border: none; border-radius: 8px;
-    font-size: 15px; font-weight: 500;
+    flex: 1;
+    max-width: 160px;
+    text-align: center;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
     background: transparent;
     color: #475569;
     font-family: 'Inter', sans-serif;
     transition: background 0.2s, color 0.2s;
-    position: relative;
 }
 
 .settings-nav-btn:hover { background: #E2E8F0; color: #0F172A; }
@@ -145,10 +100,30 @@ nav {
     box-shadow: 0 1px 4px rgba(0,0,0,0.08);
 }
 
-/* ── SETTINGS PANEL ── */
+/* ── MAIN CONTENT ── */
+.content {
+    margin-left: 80px;
+    margin-top: 56px;
+    padding: 40px;
+    background: #FFFFFF;
+    min-height: calc(100vh - 56px);
+}
+
+.page-title {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 28px;
+    color: #0F172A;
+}
+
+/* ── SETTINGS LAYOUT (Content Panel Columns) ── */
+.settings-layout {
+    display: flex;
+    flex-direction: column;
+}
+
 .settings-panel {
     flex: 1;
-    padding: 0;
 }
 
 .tab-pane { display: none; animation: fadeIn 0.25s ease; }
@@ -159,120 +134,148 @@ nav {
     to   { opacity: 1; transform: translateY(0); }
 }
 
-.tab-heading {
-    font-size: 18px; font-weight: 700;
-    margin-bottom: 24px; color: #0F172A;
+/* ── PROFILE TAB LAYOUT (Image 2 Columns) ── */
+.settings-content-wrap {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
 }
 
-/* ── PROFILE TAB ── */
-.profile-top {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-    margin-bottom: 36px;
+/* Left Column: Avatar Section */
+.avatar-section {
+    flex-shrink: 0;
 }
 
 .avatar-wrap {
     position: relative;
     width: 160px; height: 160px;
-    flex-shrink: 0;
 }
 
 .avatar-wrap img {
     width: 160px; height: 160px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #E2E8F0;
-    background: #EFF6FF; /* soft circle before a photo loads */
+    border: 3px solid #EFF6FF;
+    background: #EFF6FF;
     display: block;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
 
 .edit-avatar-btn {
     position: absolute;
     bottom: 8px; right: 8px;
-    width: 34px; height: 34px;
+    width: 32px; height: 32px;
     background: white;
-    border: 1.5px solid #E2E8F0;
+    border: 1px solid #E2E8F0;
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     transition: background 0.2s, transform 0.15s;
     color: #374151;
 }
 
-.edit-avatar-btn svg { width: 16px; height: 16px; }
+.edit-avatar-btn svg { width: 15px; height: 15px; }
 .edit-avatar-btn:hover { background: #F1F5F9; transform: scale(1.08); }
 
-.profile-name {
-    font-size: 30px; font-weight: 700;
-    color: #0F172A;
+/* Right Column: Form Section */
+.form-section {
+    flex-grow: 1;
+    max-width: 600px;
 }
 
-/* ── FIELDS ── */
+.profile-name {
+    font-size: 26px;
+    font-weight: 700;
+    color: #0F172A;
+    margin-bottom: 24px;
+}
+
+/* ── PROFILE FIELDS ── */
 .profile-fields {
-    display: flex; flex-direction: column;
-    gap: 20px; margin-bottom: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-bottom: 24px;
 }
 
 .field-row {
     display: flex;
-    align-items: flex-start;
-    gap: 20px;
+    align-items: center;
+    gap: 16px;
 }
 
 .field-row label {
-    width: 120px; flex-shrink: 0;
-    font-size: 15px; font-weight: 500;
-    color: #374151; padding-top: 10px;
+    width: 100px;
+    flex-shrink: 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: #475569;
 }
 
 .field-row input,
 .field-row select {
     flex: 1;
     padding: 10px 14px;
-    border: 1.5px solid #E2E8F0;
-    border-radius: 8px;
-    font-size: 15px; font-family: 'Inter', sans-serif;
-    color: #0F172A; background: white; outline: none;
-    transition: border-color 0.2s;
-    max-width: 400px;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    color: #0F172A;
+    background: white;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .field-row input:focus,
-.field-row select:focus { border-color: #2563EB; }
-.field-row input[readonly] { background: #F8FAFC; color: #94A3B8; cursor: not-allowed; }
-.field-row input::placeholder { color: #94A3B8; }
-
-/* ── SAVE BUTTON ── */
-.save-btn {
-    background: #2563EB; color: white;
-    border: none; border-radius: 10px;
-    padding: 13px 32px;
-    font-size: 15px; font-weight: 600;
-    cursor: pointer; font-family: 'Inter', sans-serif;
-    transition: background 0.2s, transform 0.15s;
+.field-row select:focus {
+    border-color: #2563EB;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
 }
 
-.save-btn:hover { background: #1D4ED8; transform: translateY(-1px); }
+.field-row input[readonly] {
+    background: #F1F5F9;
+    color: #94A3B8;
+    cursor: not-allowed;
+    border-color: #E2E8F0;
+}
 
-/* ── TOAST ── */
+/* ── SAVE CHANGES BUTTON ── */
+.save-btn {
+    background: #2563EB;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: background 0.2s;
+}
+
+.save-btn:hover { background: #1D4ED8; }
+
 .save-toast {
     display: inline-block;
     margin-left: 16px;
-    font-size: 14px; font-weight: 600;
+    font-size: 14px;
+    font-weight: 600;
     color: #22C55E;
-    opacity: 0; transition: opacity 0.3s;
+    opacity: 0;
+    transition: opacity 0.3s;
 }
 
 .save-toast.show { opacity: 1; }
 
 /* ── PASSWORD FIELD ── */
 .password-wrap {
-    flex: 1; max-width: 400px;
-    display: flex; align-items: center;
-    border: 1.5px solid #E2E8F0;
-    border-radius: 8px; overflow: hidden;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    overflow: hidden;
     background: white;
     transition: border-color 0.2s;
 }
@@ -282,20 +285,17 @@ nav {
 .password-wrap input {
     flex: 1; padding: 10px 14px;
     border: none; outline: none;
-    font-size: 15px; font-family: 'Inter', sans-serif;
+    font-size: 14px; font-family: 'Inter', sans-serif;
     color: #0F172A; background: transparent;
-    max-width: unset;
 }
 
 .eye-btn {
     padding: 0 12px; background: none; border: none;
     cursor: pointer; color: #94A3B8;
     display: flex; align-items: center;
-    transition: color 0.2s;
 }
 
 .eye-btn svg { width: 18px; height: 18px; }
-.eye-btn:hover { color: #0F172A; }
 
 /* Strength bar */
 .strength-bar {
@@ -353,7 +353,7 @@ nav {
 /* ── DANGER ZONE ── */
 .danger-zone {
     margin-top: 36px; padding: 20px;
-    border: 1.5px solid #FEE2E2;
+    border: 1px solid #FEE2E2;
     border-radius: 12px; background: #FFF5F5;
 }
 
@@ -370,26 +370,104 @@ nav {
 
 .danger-btn:hover { background: #DC2626; }
 
-/* ── SECURITY EXTRAS ── */
-.security-extras { margin-top: 28px; }
-
-/* ── HAMBURGER ── */
-/* Styled by mobile-nav.css; only ensure it shows next to avatar */
-/* hamburger-btn styled by mobile-nav.css */
-
-/* ── RESPONSIVE ── */
-@media (max-width: 900px) {
-    .settings-panel { padding: 20px 0; }
-    .profile-top { flex-direction: column; align-items: flex-start; }
-}
-
+/* ── RESPONSIVE MOBILE VIEW ── */
 @media (max-width: 640px) {
-    .content { margin-left: 0; padding: 88px 16px 24px; }
-    /* sidebar & hamburger handled by mobile-nav.css — sidebar slides in,
-       not a bottom bar, for consistency across all pages */
-    nav { padding: 12px 16px; }
-    .field-row { flex-direction: column; gap: 6px; }
-    .field-row label { width: auto; padding-top: 0; }
-    .profile-name { font-size: 22px; }
+    /* Main container settings */
+    .content {
+        margin-left: 0;
+        margin-top: 56px;
+        padding: 24px 16px 88px; /* prevents layout from overlapping the bottom bar */
+    }
+
+    /* Standard Tab Navigation at the top of the mobile screen */
+    .settings-nav {
+        left: 0;
+        padding: 0 12px;
+        background: #F1F5F9;
+    }
+
+    /* Column wrap on mobile */
+    .settings-content-wrap {
+        flex-direction: column;
+        gap: 20px;
+        align-items: flex-start;
+    }
+
+    /* Stacked Form Fields */
+    .field-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+    }
+
+    .field-row label {
+        width: auto;
+        padding-top: 0;
+    }
+
+    .profile-name {
+        font-size: 22px;
+        margin-bottom: 16px;
+    }
+
+    /* ── MOBILE BOTTOM NAVIGATION BAR ── */
+    .sidebar {
+        position: fixed;
+        top: auto; bottom: 0; left: 0; right: 0;
+        width: 100%; height: 62px;
+        background: #2563EB;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        padding: 0 8px; gap: 0;
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -4px 24px rgba(37, 99, 235, 0.22);
+        z-index: 999;
+    }
+
+    .sidebar-link {
+        flex: 1; 
+        height: 50px;
+        flex-direction: column;
+        gap: 3px;
+        border-radius: 12px;
+        color: rgba(255, 255, 255, 0.7);
+        transition: background 0.2s, color 0.2s;
+        max-width: none; /* allows adequate space for label tags */
+    }
+
+    .sidebar-link svg { 
+        width: 22px; 
+        height: 22px; 
+    }
+
+    /* Convert standard desktop tooltips to visible bottom labels on mobile */
+    .sidebar-link::before {
+        content: attr(data-tip);
+        font-size: 10px; 
+        font-weight: 600;
+        font-family: 'Inter', sans-serif;
+        line-height: 1; 
+        order: 2; 
+        opacity: 0.8;
+        transition: opacity 0.2s;
+    }
+
+    /* Hide standard hover-based desktop tooltips */
+    .sidebar-link::after { 
+        display: none; 
+    }
+
+    .sidebar-link.active::before,
+    .sidebar-link:hover::before {
+        opacity: 1;
+    }
+
+    .sidebar-link:hover,
+    .sidebar-link.active {
+        background-color: rgba(255, 255, 255, 0.15);
+        color: #FFFFFF;
+        box-shadow: none;
+    }
 }
 
