@@ -1,3 +1,6 @@
+
+```--- END OF FILE text/javascript ---
+
 /* ═══════════════════════════════════════════
    TALENT FLOW — Performance
    performance.js
