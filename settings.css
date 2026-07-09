@@ -112,15 +112,17 @@ nav {
 }
 
 /* ── SETTINGS LEFT NAV ── */
-.settings-nav {
-    width: 100%;
-    background: #F1F5F9;
-    border-radius: 14px;
-    padding: 12px 16px;
+/* Prevent global nav header styling from leaking into sub-navigation */
+nav.settings-nav {
+    position: static;
+    height: auto;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 8px;
+    justify-content: flex-start;
+    align-items: stretch;
+    background: #F1F5F9;
+    border-bottom: none;
+    z-index: auto;
+    padding: 12px 16px;
 }
 
 .settings-nav-btn {
