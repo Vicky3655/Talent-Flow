@@ -452,4 +452,32 @@ nav {
     .field-row { flex-direction: column; gap: 6px; }
     .field-row label { width: auto; padding-top: 0; }
     .profile-name { font-size: 22px; }
+    
+/* Settings Horizontal Navigation (Mobile Scrollbar style) */
+    .settings-nav {
+        width: 100%;
+        background: #F1F5F9;
+        border-radius: 12px;
+        padding: 8px 10px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap; /* prevents wrapping */
+        overflow-x: auto; /* horizontal scrolling */
+        scrollbar-width: none; /* hide default scrollbar for Firefox */
+        -webkit-overflow-scrolling: touch; /* smooth momentum scroll on iOS */
+        gap: 6px;
+    }
+
+    /* Hide default scrollbar for Webkit browsers (Chrome, Safari) */
+    .settings-nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Style adjustment for nav buttons inside mobile scroll menu */
+    .settings-nav-btn {
+        flex-shrink: 0; /* prevents text from squishing or shrinking */
+        padding: 8px 14px;
+        font-size: 14px;
+        white-space: nowrap;
+    }
 }
