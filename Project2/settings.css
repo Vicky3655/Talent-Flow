@@ -110,19 +110,26 @@ nav {
 }
 
 /* ── SETTINGS LEFT NAV ── */
+
+nav.settings-nav,
 .settings-nav {
-    width: 100%;
-    background: #F1F5F9;
-    border-radius: 14px;
-    padding: 12px 16px;
+    position: static;
+    height: auto;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    justify-content: space-between; /* distributes space evenly across the container */
+    align-items: center;
+    background: #F1F5F9;
+    border-bottom: none;
+    z-index: auto;
+    padding: 12px 16px;
+    width: 100%;
     gap: 8px;
+    border-radius: 14px;
 }
 
 .settings-nav-btn {
-    text-align: left;
+    flex: 1; /* distributes buttons evenly across the desktop screen */
+    text-align: center; /* centers the label inside the expanded tab area */
     padding: 10px 18px;
     border: none; border-radius: 8px;
     font-size: 15px; font-weight: 500;
@@ -381,7 +388,7 @@ nav {
     /* Adjusted bottom padding to prevent content from hiding behind the navigation bar */
     .content { 
         margin-left: 0; 
-        padding: 80px 16px 88px; 
+        padding: 88px 16px 24px; 
     }
 
     /* Bottom Nav Bar (Rounded style matching the other pages) */
@@ -449,11 +456,9 @@ nav {
     .field-row { flex-direction: column; gap: 6px; }
     .field-row label { width: auto; padding-top: 0; }
     .profile-name { font-size: 22px; }
-    .field-row { flex-direction: column; gap: 6px; }
-    .field-row label { width: auto; padding-top: 0; }
-    .profile-name { font-size: 22px; }
     
 /* Settings Horizontal Navigation (Mobile Scrollbar style) */
+     nav.settings-nav,
     .settings-nav {
         width: 100%;
         background: #F1F5F9;
@@ -461,21 +466,21 @@ nav {
         padding: 8px 10px;
         display: flex;
         flex-direction: row;
-        flex-wrap: nowrap; /* prevents wrapping */
-        overflow-x: auto; /* horizontal scrolling */
-        scrollbar-width: none; /* hide default scrollbar for Firefox */
-        -webkit-overflow-scrolling: touch; /* smooth momentum scroll on iOS */
+        flex-wrap: nowrap; /* keeps all items on a single line */
+        overflow-x: auto;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
         gap: 6px;
+        justify-content: flex-start;
     }
 
-    /* Hide default scrollbar for Webkit browsers (Chrome, Safari) */
     .settings-nav::-webkit-scrollbar {
         display: none;
     }
 
-    /* Style adjustment for nav buttons inside mobile scroll menu */
     .settings-nav-btn {
-        flex-shrink: 0; /* prevents text from squishing or shrinking */
+        flex: 0 0 auto; /* prevents buttons from squeezing together on mobile screens */
+        text-align: center;
         padding: 8px 14px;
         font-size: 14px;
         white-space: nowrap;
