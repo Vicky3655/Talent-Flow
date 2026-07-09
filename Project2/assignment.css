@@ -672,7 +672,11 @@ nav {
 }
 
 /* ── Tablet / Mobile ── */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+    html, body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
 
     /* Nav */
     nav { padding: 0 16px; height: 56px; }
@@ -735,14 +739,23 @@ nav {
     .header-chips { gap: 8px; }
     .chip { padding: 5px 12px; font-size: 12px; }
 
-    /* Filter bar */
+   /* Filter bar */
     .filter-bar { flex-direction: column; align-items: stretch; gap: 10px; }
     .tab-pills {
-        overflow-x: auto; scrollbar-width: none;
+        display: flex;
+        gap: 4px;
+        width: 100%;
+        min-width: 0; /* allows the container to shrink smaller than its children */
+        overflow-x: auto;
+        white-space: nowrap;
+        scrollbar-width: none;
         -webkit-overflow-scrolling: touch;
         padding-bottom: 2px;
     }
     .tab-pills::-webkit-scrollbar { display: none; }
+    .tab-pill {
+        flex-shrink: 0; /* prevents the inner buttons from squeezing or breaking */
+    }
 
     .search-wrap { min-width: unset; width: 100%; }
 
