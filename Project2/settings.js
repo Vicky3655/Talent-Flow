@@ -244,4 +244,5 @@ shakeStyle.textContent = `
 }`;
 document.head.appendChild(shakeStyle);
 
-document.addEventListener('DOMContentLoaded', loadProfileIntoSettings);
+// Initialize profile execution
+loadProfileIntoSettings();
