@@ -184,11 +184,9 @@ nav {
     max-width: 600px;
 }
 
+/* Hidden visually to match form start directly with 'Email:' field while maintaining script compatibility */
 .profile-name {
-    font-size: 26px;
-    font-weight: 700;
-    color: #0F172A;
-    margin-bottom: 24px;
+    display: none !important;
 }
 
 /* ── PROFILE FIELDS ── */
@@ -211,20 +209,35 @@ nav {
     font-size: 14px;
     font-weight: 500;
     color: #475569;
+    text-align: left;
+}
+
+/* Wider labels on Desktop specifically for the Security tab to prevent wrap */
+.tab-pane#tab-security .field-row label {
+    width: 150px;
+}
+
+/* Flex grouping to align password fields vertically with strength meters */
+.field-input-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    max-width: 400px;
 }
 
 .field-row input,
 .field-row select {
     flex: 1;
     padding: 10px 14px;
-    border: 1px solid #E2E8F0;
-    border-radius: 10px;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 12px; /* Perfect rounded borders to match the image precisely */
     font-size: 14px;
     font-family: 'Inter', sans-serif;
     color: #0F172A;
     background: white;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
+    max-width: 400px;
 }
 
 .field-row input:focus,
@@ -234,7 +247,7 @@ nav {
 }
 
 .field-row input[readonly] {
-    background: #F1F5F9;
+    background: #F1F5F9; /* Disabled style matching the read-only 'Role:' field in image */
     color: #94A3B8;
     cursor: not-allowed;
     border-color: #E2E8F0;
@@ -273,11 +286,12 @@ nav {
     flex: 1;
     display: flex;
     align-items: center;
-    border: 1px solid #E2E8F0;
-    border-radius: 10px;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 12px; /* Uniform rounded borders matching text inputs */
     overflow: hidden;
     background: white;
     transition: border-color 0.2s;
+    width: 100%;
 }
 
 .password-wrap:focus-within { border-color: #2563EB; }
@@ -300,7 +314,7 @@ nav {
 /* Strength bar */
 .strength-bar {
     height: 5px; background: #E2E8F0; border-radius: 99px;
-    margin-top: 8px; overflow: hidden; max-width: 400px;
+    margin-top: 8px; overflow: hidden; width: 100%;
 }
 
 .strength-fill {
@@ -401,8 +415,12 @@ nav {
     }
 
     .field-row label {
-        width: auto;
+        width: auto !important;
         padding-top: 0;
+    }
+
+    .field-input-group {
+        max-width: none;
     }
 
     .profile-name {
@@ -410,7 +428,7 @@ nav {
         margin-bottom: 16px;
     }
 
-    /* ── MOBILE BOTTOM NAVIGATION BAR (Matches Courses Page design) ── */
+    /* ── MOBILE BOTTOM NAVIGATION BAR ── */
     .sidebar {
         position: fixed;
         top: auto; bottom: 0; left: 0; right: 0;
@@ -433,7 +451,7 @@ nav {
         border-radius: 12px;
         color: rgba(255, 255, 255, 0.7);
         transition: background 0.2s, color 0.2s;
-        max-width: none; /* allows adequate space for label tags */
+        max-width: none;
     }
 
     .sidebar-link svg { 
