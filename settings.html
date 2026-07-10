@@ -7,14 +7,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script type="module" src="auth.js"></script>
     <title>Talent Flow – Settings</title>
 </head>
 <body>
 
-<!-- SIDEBAR (Desktop Left / Mobile Bottom Nav) -->
+<!-- HIDDEN COMPATIBILITY NAV FOR BACKWARDS INTEGRATION -->
+<nav class="app-nav" style="display: none !important;">
+    <span id="navRole"></span>
+    <div class="avatar"><img src="" alt=""></div>
+</nav>
+
+<!-- SIDEBAR (Desktop Left Nav / Mobile Bottom Nav) -->
 <aside class="sidebar" id="sidebar">
-    <!-- 1. Dashboard -->
     <a href="instructor-dashboard.html" class="sidebar-link" data-tip="Dashboard">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="3" y="3" width="7" height="7"></rect>
@@ -23,36 +27,26 @@
             <rect x="3" y="14" width="7" height="7"></rect>
         </svg>
     </a>
-
-    <!-- 2. Courses -->
     <a href="courses.html" class="sidebar-link" data-tip="Courses">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 20.25h12m-7.5-3v3m3-3v3m-10.125-3h17.25c.621 0 1.125-.504 1.125-1.125V4.875c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125Z"/>
         </svg>
     </a>
-
-    <!-- 3. Assignments -->
     <a href="instructor-assignments.html" class="sidebar-link" data-tip="Assignments">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3 1.5 1.5 3-3.75" />
         </svg>
     </a>
-
-    <!-- 4. Students -->
     <a href="students.html" class="sidebar-link" data-tip="Students">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 3.741-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"/>
         </svg>
     </a>
-
-    <!-- 5. Performance -->
     <a href="performance.html" class="sidebar-link" data-tip="Progress">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"/>
         </svg>
     </a>
-
-    <!-- 6. Settings -->
     <a href="settings.html" class="sidebar-link active" data-tip="Settings">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75a4.5 4.5 0 0 1-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 1 1-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 0 1 6.336-4.486l-3.276 3.276a3.004 3.004 0 0 0 2.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852Z"/>
@@ -60,7 +54,7 @@
     </a>
 </aside>
 
-<!-- TOP SUB-NAVIGATION TAB MENU -->
+<!-- TOP SUB-NAVIGATION MENU -->
 <div class="settings-nav">
     <button class="settings-nav-btn active" data-tab="profile">Profile</button>
     <button class="settings-nav-btn" data-tab="account">Account</button>
@@ -68,7 +62,7 @@
     <button class="settings-nav-btn" data-tab="security">Security</button>
 </div>
 
-<!-- MAIN -->
+<!-- MAIN CONTENT -->
 <main class="content">
 
     <h1 class="page-title">Settings</h1>
@@ -80,7 +74,7 @@
             <div class="tab-pane active" id="tab-profile">
                 <div class="settings-content-wrap">
                     
-                    <!-- Left Avatar Column -->
+                    <!-- Left Column: Avatar Section -->
                     <div class="avatar-section">
                         <div class="avatar-wrap">
                             <img src="" alt="Profile Photo" id="profileImg">
@@ -93,7 +87,7 @@
                         </div>
                     </div>
 
-                    <!-- Right Form Column -->
+                    <!-- Right Column: Form Section -->
                     <div class="form-section">
                         <h2 class="profile-name" id="profileDisplayName"></h2>
                         
@@ -114,62 +108,6 @@
                                 <label for="fieldRole">Role:</label>
                                 <input type="text" id="fieldRole" value="" readonly>
                             </div>
-
-                            <!-- Instructor-only fields -->
-                            <div class="field-row role-field role-field-instructor" hidden>
-                                <label for="fieldTitle">Title:</label>
-                                <input type="text" id="fieldTitle" placeholder="e.g. Senior Data Science Instructor">
-                            </div>
-                            <div class="field-row role-field role-field-instructor" hidden>
-                                <label for="fieldExpertise">Expertise:</label>
-                                <input type="text" id="fieldExpertise" placeholder="e.g. Python, Machine Learning">
-                            </div>
-                            <div class="field-row role-field role-field-instructor" hidden>
-                                <label for="fieldExperience">Experience:</label>
-                                <input type="number" id="fieldExperience" min="0" max="60" placeholder="Years">
-                            </div>
-                            <div class="field-row role-field role-field-instructor" hidden>
-                                <label for="fieldEducation">Education:</label>
-                                <input type="text" id="fieldEducation" placeholder="Degrees & certifications">
-                            </div>
-
-                            <!-- Student-only fields -->
-                            <div class="field-row role-field role-field-student" hidden>
-                                <label for="fieldEducationLevel">Education Level:</label>
-                                <select id="fieldEducationLevel">
-                                    <option value="">--Please choose an option--</option>
-                                    <option value="High School">High School</option>
-                                    <option value="Undergraduate">Undergraduate</option>
-                                    <option value="Graduate">Graduate</option>
-                                    <option value="Professional / Self-taught">Professional / Self-taught</option>
-                                </select>
-                            </div>
-                            <div class="field-row role-field role-field-student" hidden>
-                                <label for="fieldFieldOfStudy">Field of Study:</label>
-                                <input type="text" id="fieldFieldOfStudy" placeholder="e.g. Computer Science">
-                            </div>
-                            <div class="field-row role-field role-field-student" hidden>
-                                <label for="fieldInterests">Interests:</label>
-                                <input type="text" id="fieldInterests" placeholder="Comma-separated topics">
-                            </div>
-                            <div class="field-row role-field role-field-student" hidden>
-                                <label for="fieldGoals">Learning Goals:</label>
-                                <input type="text" id="fieldGoals" placeholder="What you're working toward">
-                            </div>
-
-                            <!-- Shared social links -->
-                            <div class="field-row">
-                                <label for="fieldLinkedin">LinkedIn:</label>
-                                <input type="url" id="fieldLinkedin" placeholder="https://linkedin.com/in/…">
-                            </div>
-                            <div class="field-row role-field role-field-instructor" hidden>
-                                <label for="fieldWebsite">Website:</label>
-                                <input type="url" id="fieldWebsite" placeholder="https://…">
-                            </div>
-                            <div class="field-row role-field role-field-student" hidden>
-                                <label for="fieldGithub">GitHub:</label>
-                                <input type="url" id="fieldGithub" placeholder="https://github.com/…">
-                            </div>
                         </div>
 
                         <button class="save-btn" id="saveProfileBtn">Save Changes</button>
@@ -183,11 +121,11 @@
                 <h3 class="tab-heading">Account Settings</h3>
                 <div class="profile-fields">
                     <div class="field-row">
-                        <label>Username:</label>
+                        <label for="fieldUsername">Username:</label>
                         <input type="text" id="fieldUsername" value="">
                     </div>
                     <div class="field-row">
-                        <label>Language:</label>
+                        <label for="fieldLanguage">Language:</label>
                         <select id="fieldLanguage">
                             <option>English</option>
                             <option>French</option>
@@ -195,7 +133,7 @@
                         </select>
                     </div>
                     <div class="field-row">
-                        <label>Timezone:</label>
+                        <label for="fieldTimezone">Timezone:</label>
                         <select id="fieldTimezone">
                             <option>Africa/Lagos (WAT)</option>
                             <option>UTC</option>
@@ -203,9 +141,10 @@
                         </select>
                     </div>
                 </div>
+                
                 <button class="save-btn" id="saveAccountBtn">Save Changes</button>
                 <div class="save-toast" id="accountToast"></div>
-                
+
                 <div class="danger-zone">
                     <h4>Session</h4>
                     <button class="danger-btn" id="signOutBtn" style="background:#475569">Sign Out</button>
@@ -262,6 +201,7 @@
                         </label>
                     </div>
                 </div>
+                
                 <button class="save-btn" id="saveNotificationsBtn">Save Preferences</button>
                 <div class="save-toast" id="notificationsToast"></div>
             </div>
@@ -311,6 +251,7 @@
                         </div>
                     </div>
                 </div>
+                
                 <button class="save-btn" onclick="handlePasswordChange()">Update Password</button>
                 <div class="save-toast" id="pwdToast"></div>
 
