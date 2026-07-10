@@ -16,6 +16,8 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
   sendPasswordResetEmail,
+  sendEmailVerification,
+  reload,
   onAuthStateChanged,
   signOut,
 } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js';
@@ -24,6 +26,12 @@ import {
   doc,
   setDoc,
   getDoc,
+  collection,
+  addDoc,
+  query,
+  where,
+  getDocs,
+  serverTimestamp,
 } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js';
 
 /* ── Paste your Talent Flow project's config here ────────────
@@ -89,6 +97,64 @@ async function loadProfile(uid) {
   return snap.exists() ? snap.data() : null;
 }
 
+/* ── COURSES & ENROLLMENTS (Firestore) ───────────────────────
+   Two more collections alongside "users":
+     courses/{courseId}      — one doc per course an instructor creates
+     enrollments/{studentUid_courseId} — one doc per student+course pair,
+       ID built from both uids so a student can't double-enroll and
+       "am I enrolled?" is a single doc lookup, not a query. ────── */
+
+async function createCourseDoc(instructorUid, instructorName, data) {
+  const ref = await withTimeout(addDoc(collection(db, 'courses'), {
+    title: data.title,
+    thumb: data.thumb || 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&q=80',
+    lessons: data.lessons || 0,
+    status: data.status || 'draft',
+    instructorUid,
+    instructorName,
+    createdAt: serverTimestamp(),
+  }));
+  return ref.id;
+}
+
+async function listPublishedCoursesDocs() {
+  const q = query(collection(db, 'courses'), where('status', '==', 'published'));
+  const snap = await withTimeout(getDocs(q));
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+}
+
+async function listCoursesByInstructorDocs(instructorUid) {
+  const q = query(collection(db, 'courses'), where('instructorUid', '==', instructorUid));
+  const snap = await withTimeout(getDocs(q));
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+}
+
+async function enrollInCourseDoc(studentUid, course) {
+  const enrollmentId = `${studentUid}_${course.id}`;
+  await withTimeout(setDoc(doc(db, 'enrollments', enrollmentId), {
+    studentUid,
+    courseId: course.id,
+    courseTitle: course.title,
+    thumb: course.thumb || '',
+    lessons: course.lessons || 0,
+    instructorName: course.instructorName || '',
+    progress: 0,
+    completedLessons: 0,
+    enrolledAt: serverTimestamp(),
+  }));
+}
+
+async function isEnrolledDoc(studentUid, courseId) {
+  const snap = await withTimeout(getDoc(doc(db, 'enrollments', `${studentUid}_${courseId}`)));
+  return snap.exists();
+}
+
+async function listMyEnrollmentsDocs(studentUid) {
+  const q = query(collection(db, 'enrollments'), where('studentUid', '==', studentUid));
+  const snap = await withTimeout(getDocs(q));
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+}
+
 /* ── SHARED AUTH STATE ────────────────────────────────────────
    One listener for the whole app. Pages that need to know who's
    signed in (profile pages) call TalentFlowAuth.requireAuth()
@@ -141,7 +207,7 @@ window.TalentFlowAuth = {
         // strand someone who's already authenticated over this.
         console.error('Firestore profile read failed (continuing anyway):', err);
       }
-      window.TalentFlowAuth.redirectToRoleProfile(role);
+      window.TalentFlowAuth.redirectToRoleProfile(role, user);
     });
   },
 
@@ -152,6 +218,9 @@ window.TalentFlowAuth = {
     await updateProfile(user, { displayName: name });
     saveProfile(user.uid, { name, email, role: '', provider: 'email' }).catch((err) => {
       console.error('Firestore profile save failed (continuing anyway):', err);
+    });
+    sendEmailVerification(user).catch((err) => {
+      console.error('Could not send verification email (continuing anyway):', err);
     });
     return { user, role: '' };
   },
@@ -174,13 +243,34 @@ window.TalentFlowAuth = {
     return sendPasswordResetEmail(auth, email);
   },
 
-  // Where to send someone after login/signup, based on role.
-  // Blank role (brand-new signup, or a first-time Google sign-in that's
-  // never chosen one) goes to choose-role.html to pick one.
-  redirectToRoleProfile(role) {
+  // Where to send someone after login/signup, based on role. An
+  // unverified email/password account is sent to verify-email.html
+  // first — Google accounts arrive already verified by Google, so
+  // they skip straight through. Blank role (brand-new signup) goes
+  // to choose-role.html to pick one.
+  redirectToRoleProfile(role, user) {
+    const u = user || window.TalentFlowUser;
+    if (u && !u.emailVerified) { window.location.href = 'verify-email.html'; return; }
     if (role === 'Instructor') window.location.href = 'instructor-profile.html';
     else if (role === 'Student') window.location.href = 'student-profile.html';
     else window.location.href = 'choose-role.html';
+  },
+
+  // verify-email.html calls this to send (or resend) the link.
+  sendVerificationEmail() {
+    const user = window.TalentFlowUser;
+    if (!user) return Promise.reject(new Error('Not signed in'));
+    return sendEmailVerification(user);
+  },
+
+  // verify-email.html calls this after the person says they've
+  // clicked the link — re-checks with Firebase rather than trusting
+  // a local flag, since the click happened in their email client.
+  async checkEmailVerified() {
+    const user = window.TalentFlowUser;
+    if (!user) return false;
+    await withTimeout(reload(user));
+    return user.emailVerified;
   },
 
   // choose-role.html calls this once someone picks a card. Sends them
@@ -211,12 +301,38 @@ window.TalentFlowAuth = {
     });
   },
 
-  // Shared Firestore instance — data-store.js reuses this instead of
-  // calling initializeApp() a second time (Firebase throws if you do).
-  db,
-
   saveProfile,
   loadProfile,
   initialsAvatar,
   friendlyError,
+
+  // Courses & enrollment
+  createCourse(data) {
+    const user = window.TalentFlowUser;
+    if (!user) return Promise.reject(new Error('Not signed in'));
+    return createCourseDoc(user.uid, user.displayName || 'Instructor', data);
+  },
+  listPublishedCourses() {
+    return listPublishedCoursesDocs();
+  },
+  listMyCourses() {
+    const user = window.TalentFlowUser;
+    if (!user) return Promise.reject(new Error('Not signed in'));
+    return listCoursesByInstructorDocs(user.uid);
+  },
+  enrollInCourse(course) {
+    const user = window.TalentFlowUser;
+    if (!user) return Promise.reject(new Error('Not signed in'));
+    return enrollInCourseDoc(user.uid, course);
+  },
+  isEnrolled(courseId) {
+    const user = window.TalentFlowUser;
+    if (!user) return Promise.resolve(false);
+    return isEnrolledDoc(user.uid, courseId);
+  },
+  listMyEnrollments() {
+    const user = window.TalentFlowUser;
+    if (!user) return Promise.reject(new Error('Not signed in'));
+    return listMyEnrollmentsDocs(user.uid);
+  },
 };

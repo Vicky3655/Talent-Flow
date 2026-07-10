@@ -7,19 +7,15 @@
    no separate confirm button to click.
    ============================================================ */
 
-// TEMP while we confirm the right files are deployed together: if
-// anything on this page throws (e.g. a leftover mismatched file),
-// show it instead of failing silently. Safe to delete this block
-// once everything's confirmed working.
-window.addEventListener('error', (e) => {
-  alert('This page hit an error — please send this exact text back:\n\n' + e.message);
-});
-
 document.addEventListener('DOMContentLoaded', async () => {
   const auth = window.TalentFlowAuth;
   if (!auth) return;
 
-  await auth.requireAuth(); // redirects to login.html if signed out
+  const user = await auth.requireAuth(); // redirects to login.html if signed out
+
+  // Unverified email/password accounts shouldn't reach the role picker
+  // at all — send them to verify first.
+  if (!user.emailVerified) { window.location.href = 'verify-email.html'; return; }
 
   const radios     = document.querySelectorAll('input[name="role"]');
   const status      = document.getElementById('roleStatus');

@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     setupPasswordToggles();
+    setupPasswordStrength();
 
     // 1. Splash Screen Transition (page.html)
     if (document.getElementById("loader")) {
@@ -38,8 +39,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert("Please fill in all fields.");
                 return;
             }
-            if (password.length < 8) {
-                alert("Password must be at least 8 characters.");
+            if (!isPasswordStrong(password)) {
+                alert("Password needs at least 8 characters, including a letter, a number, and a symbol.");
+                document.getElementById("password").focus();
                 return;
             }
             if (!auth) {
@@ -49,8 +51,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             createAccountBtn.disabled = true;
             try {
-                const { role } = await auth.register(name, email, password);
-                auth.redirectToRoleProfile(role);
+                const { user, role } = await auth.register(name, email, password);
+                auth.redirectToRoleProfile(role, user);
             } catch (err) {
                 createAccountBtn.disabled = false;
                 alert(auth.friendlyError ? auth.friendlyError(err) : "Something went wrong — please try again.");
@@ -78,8 +80,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             loginBtn.disabled = true;
             try {
-                const { role } = await auth.login(email, password);
-                auth.redirectToRoleProfile(role);
+                const { user, role } = await auth.login(email, password);
+                auth.redirectToRoleProfile(role, user);
             } catch (err) {
                 loginBtn.disabled = false;
                 alert(auth.friendlyError ? auth.friendlyError(err) : "Incorrect email or password.");
@@ -134,6 +136,48 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+// 6. Password strength warning (register.html) — must contain
+//    letters, numbers, AND symbols together, checked live as they type.
+function setupPasswordStrength() {
+    const input   = document.getElementById('password');
+    const warning = document.getElementById('passwordStrengthWarning');
+    if (!input || !warning) return;
+
+    function check() {
+        const val = input.value;
+        if (!val) { warning.hidden = true; return; }
+
+        const hasLetter = /[A-Za-z]/.test(val);
+        const hasNumber = /[0-9]/.test(val);
+        const hasSymbol = /[^A-Za-z0-9]/.test(val);
+        const longEnough = val.length >= 8;
+
+        if (hasLetter && hasNumber && hasSymbol && longEnough) {
+            warning.hidden = true;
+            return;
+        }
+
+        const missing = [];
+        if (!longEnough) missing.push('at least 8 characters');
+        if (!hasLetter)  missing.push('a letter');
+        if (!hasNumber)  missing.push('a number');
+        if (!hasSymbol)  missing.push('a symbol (like ! ? # -)');
+
+        warning.textContent = 'Password needs ' + missing.join(', ');
+        warning.hidden = false;
+    }
+
+    input.addEventListener('input', check);
+}
+
+// Reusable everywhere a submit handler wants to double check strength
+// before letting a password through, not just show the warning.
+function isPasswordStrong(password) {
+    return password.length >= 8
+        && /[A-Za-z]/.test(password)
+        && /[0-9]/.test(password)
+        && /[^A-Za-z0-9]/.test(password);
+}
 // 5. Password show/hide toggle (login.html + register.html)
 function setupPasswordToggles() {
     document.querySelectorAll(".toggle-password").forEach((btn) => {
