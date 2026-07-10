@@ -595,27 +595,25 @@ window.addEventListener('resize', () => {
 });
 
 /* ── Mobile sidebar toggle ─────────────────── */
-
 function initMobileMenu() {
     const hamburger = document.getElementById('hamburger-btn');
     const overlay = document.getElementById('sidebar-overlay');
     const sidebar = document.getElementById('sidebar');
-    if (!hamburger || !overlay || !sidebar) return;
+    const closeBtn = document.querySelector('.sb-close-btn');
+    
+    if (!hamburger || !sidebar) return;
+    
     hamburger.addEventListener('click', () => {
         sidebar.classList.add('mobile-open');
         document.body.style.overflow = 'hidden';
     });
-    overlay.addEventListener('click', () => {
+    
+    const closeMenu = () => {
         sidebar.classList.remove('mobile-open');
         document.body.style.overflow = '';
-    });
+    };
+    
+    if (overlay) overlay.addEventListener('click', closeMenu);
+    if (closeBtn) closeBtn.addEventListener('click', closeMenu);
 }
-
-/* ── Boot ────────────────────────────────── */
-
-document.addEventListener('DOMContentLoaded', () => {
-    applyProfileToNav();
-    initPeriodPills();
-    initMobileMenu();
-    updateAll(currentPeriod);
 });
