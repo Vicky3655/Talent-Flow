@@ -34,6 +34,7 @@ body {
     background: var(--slate-0);
     color: var(--slate-9);
     min-height: 100vh;
+    overflow-x: hidden; /* Prevent horizontal scrolling entirely */
 }
 
 /* ─── HIDDEN BY DEFAULT ON DESKTOP ─── */
@@ -228,7 +229,7 @@ nav {
 
 .period-pill {
     padding: 8px 18px;
-    border: none; border-radius: 9px;
+    border: none; border-radius: 99px;
     font-size: 13px; font-weight: 600;
     cursor: pointer; color: var(--slate-5);
     background: transparent;
@@ -538,6 +539,24 @@ nav {
     .insights-col { grid-column: 1; }
 }
 
+/* ─── MOBILE DRAWER OVERLAY ─── */
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.4); /* Slate 900 tint */
+    backdrop-filter: blur(4px);
+    z-index: 240;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Links the overlay triggers automatically to sidebar toggle state */
+.sidebar.mobile-open + .sidebar-overlay {
+    opacity: 1;
+    visibility: visible;
+}
+
 /* ─── GENERAL MOBILE VIEWPORT ─── */
 @media (max-width: 768px) {
     nav {
@@ -548,7 +567,7 @@ nav {
     .logo span { font-size: 16px; }
     .logo svg  { width: 26px; height: 26px; }
 
-    .nav-right  { gap: 10px !important; }
+    .nav-right  { gap: 8px !important; }
     .nav-icon-btn { padding: 6px; }
     .nav-role { display: none !important; } /* Prevents overlapping navigation items on mobile */
     .avatar img { width: 32px; height: 32px; }
@@ -725,14 +744,72 @@ nav {
         padding: 24px 16px 48px !important;
     }
 
-    .period-pills { flex-wrap: wrap; }
+    /* Page header column align & layout spacing */
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .header-text h1 {
+        font-size: 24px;
+    }
+
+    .page-sub {
+        font-size: 13px;
+    }
+
+    /* Touch scrollable period filters to prevent squishing & text-overflow */
+    .period-pills {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        width: 100%;
+        -webkit-overflow-scrolling: touch;
+        background: var(--slate-1);
+        padding: 4px;
+        border-radius: var(--radius);
+    }
+    .period-pills::-webkit-scrollbar {
+        display: none;
+    }
+    .period-pill {
+        flex-shrink: 0;
+        padding: 8px 15px;
+        font-size: 12px;
+    }
+
     .stat-cards { grid-template-columns: repeat(2, 1fr); gap: 14px; }
-    .card-value { font-size: 30px; }
+    .stat-card { padding: 16px 14px 12px; }
+    .card-value { font-size: 28px; }
+    .trend-section { padding: 20px 16px; }
+    .trend-head { margin-bottom: 16px; gap: 8px; }
+    .chart-legend { gap: 10px; }
+    .legend-item { font-size: 11px; }
     .chart-wrap { height: 170px; }
-    .course-row { grid-template-columns: 1fr 90px 46px; }
+    
+    /* Fixed 3-column progress grid for course tables */
+    .course-row { 
+        grid-template-columns: 1fr 90px 40px; 
+        gap: 10px;
+        padding: 10px 0;
+    }
     .cr-enrolled { display: none; }
+    .cr-pct { font-size: 9px; }
+    .cr-grade { font-size: 12px; }
 }
 
 @media (max-width: 480px) {
     .stat-cards { grid-template-columns: 1fr; }
+    
+    /* Center and stack donut chart vertically below 480px to block overlap */
+    .engagement-wrap {
+        flex-direction: column;
+        gap: 12px;
+        padding-top: 20px;
+    }
+    .ring-label {
+        text-align: center;
+    }
 }
