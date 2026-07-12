@@ -47,7 +47,7 @@ const CONFIG = {
   student: {
     tagClass: 'profile-tag',
     linkClass: 'profile-link',
-    coursesUrl: '/Project2/courses.html',
+    coursesUrl: 'student-courses.html',
     storageKey: 'tf_student_profile',
     roleLabel: 'Student',
     fields: ['fullName', 'email', 'educationLevel', 'fieldOfStudy', 'bio', 'interests', 'goals', 'linkedin', 'github'],
@@ -240,6 +240,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       } catch (err) {
         console.error('Avatar upload failed — keeping the previous photo:', err);
         if (profile.avatar) data.avatar = profile.avatar;
+        alert('Your photo could not be uploaded, so the rest of your profile was saved without it.\n\n' + (err && err.message ? err.message : 'Please try again.'));
       }
       if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = originalLabel; }
     } else if (profile.avatar) {
