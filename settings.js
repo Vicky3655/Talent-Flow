@@ -183,6 +183,7 @@ document.getElementById("saveProfileBtn").addEventListener("click", async () => 
             profileImg.src = avatar;
         } catch (err) {
             console.error("Avatar upload failed — keeping the previous photo:", err);
+            showToast("saveToast", "Couldn't upload photo — the rest was still saved.", "#EF4444");
         }
         pendingAvatarFile = null;
         saveBtn.disabled = false;
