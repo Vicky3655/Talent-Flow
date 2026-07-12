@@ -92,13 +92,15 @@ function friendlyError(err) {
    name/photo on a course card without being able to read that
    instructor's email or anything else private. ─────────────── */
 
-// Never let a Firestore call hang forever — if something's silently
-// blocking the connection (a strict ad-blocker/extension is the most
-// common cause), fail after 4s instead of waiting indefinitely.
-function withTimeout(promise, ms = 4000) {
+// Never let a Firestore (or Storage) call hang forever — if something's
+// silently blocking the connection (a strict ad-blocker/extension, or —
+// for uploads specifically — Storage not being enabled yet for this
+// Firebase project), fail after a bounded time instead of waiting
+// indefinitely with no feedback.
+function withTimeout(promise, ms = 4000, message = 'Request timed out') {
   return Promise.race([
     promise,
-    new Promise((_, reject) => setTimeout(() => reject(new Error('Firestore request timed out')), ms)),
+    new Promise((_, reject) => setTimeout(() => reject(new Error(message)), ms)),
   ]);
 }
 
@@ -150,12 +152,20 @@ async function loadProfile(uid) {
 async function uploadAvatar(uid, fileOrDataUrl) {
   const path = `avatars/${uid}/${Date.now()}`;
   const storageRef = ref(storage, path);
+
+  // Uploads legitimately take longer than a Firestore read/write, so this
+  // gets a longer ceiling — but it still needs ONE. Without it, a Storage
+  // bucket that isn't enabled yet (or a blocked/broken connection to it)
+  // leaves the Save button reading "Uploading photo…" forever, with no
+  // error surfaced anywhere.
+  const timeoutMsg = 'Photo upload timed out. In the Firebase console, check Storage → Get started (Storage is a separate product from Firestore and has to be turned on).';
+
   if (typeof fileOrDataUrl === 'string') {
-    await uploadString(storageRef, fileOrDataUrl, 'data_url');
+    await withTimeout(uploadString(storageRef, fileOrDataUrl, 'data_url'), 20000, timeoutMsg);
   } else {
-    await uploadBytes(storageRef, fileOrDataUrl, { contentType: fileOrDataUrl.type || 'image/jpeg' });
+    await withTimeout(uploadBytes(storageRef, fileOrDataUrl, { contentType: fileOrDataUrl.type || 'image/jpeg' }), 20000, timeoutMsg);
   }
-  return getDownloadURL(storageRef);
+  return withTimeout(getDownloadURL(storageRef), 20000, timeoutMsg);
 }
 
 /* ── ENROLLMENTS (Firestore) ─────────────────────────────────
