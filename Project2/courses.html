@@ -11,15 +11,27 @@
     <script src="courses.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght=0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <title>Courses — Talent Flow</title>
 </head>
 <body data-profile-page="student">
 
     <div id="toast-container"></div>
 
+    <!-- NOTIFICATION BACKDROP -->
+    <div class="notif-backdrop" id="sidebarBackdrop"></div>
+
+    <!-- TOPBAR / NAVIGATION -->
     <header class="topbar">
-        <span class="brand">Talent Flow</span>
+        <div class="topbar-left">
+            <!-- Hamburger Menu Button for Mobile Viewports -->
+            <button type="button" class="hamburger-btn" id="mobileHamBtn" aria-label="Toggle Menu">
+                <span class="hb-bar hb-top"></span>
+                <span class="hb-bar hb-mid"></span>
+                <span class="hb-bar hb-bot"></span>
+            </button>
+            <span class="brand">Talent Flow</span>
+        </div>
         <div class="topbar-actions">
             <div class="avatar" style="margin-right:4px">
                 <img id="nav-avatar-img" src="" alt="Profile" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid #e2e8f0;display:block;">
@@ -30,6 +42,52 @@
         </div>
     </header>
 
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="sidebar" id="sidebarNav">
+        <!-- Mobile Drawer Header -->
+        <div class="sidebar-header">
+            <a href="#" class="sb-brand">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A5.906 5.906 0 0 1 12 3.453a5.906 5.906 0 0 1 7.234 5.881 50.61 50.61 0 0 0-2.658.813m-12.822 0A48.47 48.47 0 0 1 12 11.25c2.78 0 5.437-.472 7.91-1.328M12 11.25c.102 0 .204-.002.305-.006m-1.305.006c-.102 0-.204-.002-.305-.006m1.001 11.058v3.417" />
+                </svg>
+                <span>Talent Flow</span>
+            </a>
+            <button type="button" class="sb-close-btn" id="mobileCloseBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <span class="sb-section">Navigation</span>
+
+        <!-- Courses Catalog Link (Active) -->
+        <a href="student-courses.html" class="sidebar-link active" title="Browse Courses">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+            </svg>
+            <span class="sb-label">Browse Courses</span>
+        </a>
+
+        <!-- Profile Link -->
+        <a href="student-profile.html" class="sidebar-link" title="My Profile">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+            </svg>
+            <span class="sb-label">My Profile</span>
+        </a>
+
+        <!-- Mobile Drawer Footer -->
+        <div class="sb-footer">
+            <img id="sb-footer-avatar-img" class="sb-footer-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80" alt="Avatar">
+            <div class="sb-footer-info">
+                <div class="sb-footer-name">Student Account</div>
+                <div class="sb-footer-role">Student</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- CONTENT WRAPPER -->
     <main class="scourses-shell">
         <div class="scourses-head">
             <div>
@@ -54,5 +112,38 @@
         </div>
     </main>
 
+    <!-- SIDEBAR INTERACTIVITY SCRIPT -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamBtn = document.getElementById('mobileHamBtn');
+            const sidebar = document.getElementById('sidebarNav');
+            const closeBtn = document.getElementById('mobileCloseBtn');
+            const backdrop = document.getElementById('sidebarBackdrop');
+
+            function toggleSidebar() {
+                sidebar?.classList.toggle('mobile-open');
+                hamBtn?.classList.toggle('open');
+                backdrop?.classList.toggle('open');
+            }
+
+            hamBtn?.addEventListener('click', toggleSidebar);
+            closeBtn?.addEventListener('click', toggleSidebar);
+            backdrop?.addEventListener('click', () => {
+                sidebar?.classList.remove('mobile-open');
+                hamBtn?.classList.remove('open');
+                backdrop?.classList.remove('open');
+            });
+            
+            // Sync mobile sidebar footer photo with topbar photo
+            const navImg = document.getElementById('nav-avatar-img');
+            const sbImg = document.getElementById('sb-footer-avatar-img');
+            if (navImg && sbImg) {
+                const observer = new MutationObserver(() => {
+                    if (navImg.src) sbImg.src = navImg.src;
+                });
+                observer.observe(navImg, { attributes: true, attributeFilter: ['src'] });
+            }
+        });
+    </script>
 </body>
 </html>
