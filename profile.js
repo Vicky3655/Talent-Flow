@@ -47,7 +47,7 @@ const CONFIG = {
   student: {
     tagClass: 'profile-tag',
     linkClass: 'profile-link',
-    coursesUrl: 'student-courses.html',
+    coursesUrl: '/Project2/courses.html',
     storageKey: 'tf_student_profile',
     roleLabel: 'Student',
     fields: ['fullName', 'email', 'educationLevel', 'fieldOfStudy', 'bio', 'interests', 'goals', 'linkedin', 'github'],
