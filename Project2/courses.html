@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="mobile-nav.css">
+    <link rel="stylesheet" href="student-nav.css">
     <link rel="stylesheet" href="courses.css">
     <script type="module" src="auth.js"></script>
     <script type="module" src="data-store.js"></script>
@@ -11,139 +13,104 @@
     <script src="courses.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght=0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <title>Courses — Talent Flow</title>
 </head>
 <body data-profile-page="student">
 
     <div id="toast-container"></div>
 
-    <!-- NOTIFICATION BACKDROP -->
-    <div class="notif-backdrop" id="sidebarBackdrop"></div>
-
-    <!-- TOPBAR / NAVIGATION -->
-    <header class="topbar">
-        <div class="topbar-left">
-            <!-- Hamburger Menu Button for Mobile Viewports -->
-            <button type="button" class="hamburger-btn" id="mobileHamBtn" aria-label="Toggle Menu">
+    <!-- ══ NAV ══ -->
+    <nav>
+        <div class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+            </svg>
+            <span>Talent Flow</span>
+        </div>
+        <div class="nav-right">
+            <span class="nav-role">Student</span>
+            <div class="avatar">
+                <img id="nav-avatar-img" src="" alt="Profile">
+            </div>
+            <button type="button" class="nav-logout-btn" id="logoutBtn">Log Out</button>
+            <button class="hamburger-btn" id="hamburger-btn" aria-label="Open navigation menu">
                 <span class="hb-bar hb-top"></span>
                 <span class="hb-bar hb-mid"></span>
                 <span class="hb-bar hb-bot"></span>
             </button>
-            <span class="brand">Talent Flow</span>
         </div>
-        <div class="topbar-actions">
-            <div class="avatar" style="margin-right:4px">
-                <img id="nav-avatar-img" src="" alt="Profile" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid #e2e8f0;display:block;">
-            </div>
-            <span class="role-badge" id="roleBadge">Student</span>
-            <a href="student-profile.html" class="btn-link">My Profile</a>
-            <button type="button" class="btn-link" id="logoutBtn">Log Out</button>
-        </div>
-    </header>
+    </nav>
 
-    <!-- SIDEBAR NAVIGATION -->
-    <aside class="sidebar" id="sidebarNav">
-        <!-- Mobile Drawer Header -->
+    <!-- ══ SIDEBAR ══ -->
+    <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <a href="#" class="sb-brand">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A5.906 5.906 0 0 1 12 3.453a5.906 5.906 0 0 1 7.234 5.881 50.61 50.61 0 0 0-2.658.813m-12.822 0A48.47 48.47 0 0 1 12 11.25c2.78 0 5.437-.472 7.91-1.328M12 11.25c.102 0 .204-.002.305-.006m-1.305.006c-.102 0-.204-.002-.305-.006m1.001 11.058v3.417" />
+            <a href="../student-profile.html" class="sb-brand">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
                 </svg>
-                <span>Talent Flow</span>
+                Talent Flow
             </a>
-            <button type="button" class="sb-close-btn" id="mobileCloseBtn">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+            <button class="sb-close-btn" aria-label="Close menu">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
             </button>
         </div>
 
         <span class="sb-section">Navigation</span>
 
-        <!-- Courses Catalog Link (Active) -->
-        <a href="student-courses.html" class="sidebar-link active" title="Browse Courses">
+        <a href="../student-profile.html" class="sidebar-link" data-tip="My Profile" title="My Profile">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
-            </svg>
-            <span class="sb-label">Browse Courses</span>
-        </a>
-
-        <!-- Profile Link -->
-        <a href="student-profile.html" class="sidebar-link" title="My Profile">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
             </svg>
             <span class="sb-label">My Profile</span>
         </a>
 
-        <!-- Mobile Drawer Footer -->
+        <a href="courses.html" class="sidebar-link active" data-tip="Courses" title="Courses">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 20.25h12m-7.5-3v3m3-3v3m-10.125-3h17.25c.621 0 1.125-.504 1.125-1.125V4.875c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125Z"/>
+            </svg>
+            <span class="sb-label">Courses</span>
+        </a>
+
         <div class="sb-footer">
-            <img id="sb-footer-avatar-img" class="sb-footer-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80" alt="Avatar">
+            <img src="" alt="Student" class="sb-footer-avatar" id="sbFooterAvatar">
             <div class="sb-footer-info">
-                <div class="sb-footer-name">Student Account</div>
-                <div class="sb-footer-role">Student</div>
+                <div class="sb-footer-name" id="sbFooterName"></div>
+                <div class="sb-footer-role" id="sbFooterRole"></div>
             </div>
         </div>
     </aside>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
-    <!-- CONTENT WRAPPER -->
-    <main class="scourses-shell">
-        <div class="scourses-head">
-            <div>
-                <h1>Browse Courses</h1>
-                <p class="scourses-sub">Find your next course and start learning.</p>
+    <!-- ══ MAIN ══ -->
+    <main class="content">
+        <div class="scourses-shell">
+            <div class="scourses-head">
+                <div>
+                    <h1>Browse Courses</h1>
+                    <p class="scourses-sub">Find your next course and start learning.</p>
+                </div>
+                <div class="scourses-search">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                    </svg>
+                    <input type="text" id="courseSearch" placeholder="Search courses or instructors…">
+                </div>
             </div>
-            <div class="scourses-search">
+
+            <div class="scourse-grid" id="courseGrid"></div>
+
+            <div class="scourses-empty" id="emptyState" hidden>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 20.25h12m-7.5-3v3m3-3v3m-10.125-3h17.25c.621 0 1.125-.504 1.125-1.125V4.875c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125Z" />
                 </svg>
-                <input type="text" id="courseSearch" placeholder="Search courses or instructors…">
+                <p id="emptyStateText">No published courses yet — check back soon.</p>
             </div>
-        </div>
-
-        <div class="scourse-grid" id="courseGrid"></div>
-
-        <div class="scourses-empty" id="emptyState" hidden>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 20.25h12m-7.5-3v3m3-3v3m-10.125-3h17.25c.621 0 1.125-.504 1.125-1.125V4.875c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125Z" />
-            </svg>
-            <p id="emptyStateText">No published courses yet — check back soon.</p>
         </div>
     </main>
 
-    <!-- SIDEBAR INTERACTIVITY SCRIPT -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const hamBtn = document.getElementById('mobileHamBtn');
-            const sidebar = document.getElementById('sidebarNav');
-            const closeBtn = document.getElementById('mobileCloseBtn');
-            const backdrop = document.getElementById('sidebarBackdrop');
-
-            function toggleSidebar() {
-                sidebar?.classList.toggle('mobile-open');
-                hamBtn?.classList.toggle('open');
-                backdrop?.classList.toggle('open');
-            }
-
-            hamBtn?.addEventListener('click', toggleSidebar);
-            closeBtn?.addEventListener('click', toggleSidebar);
-            backdrop?.addEventListener('click', () => {
-                sidebar?.classList.remove('mobile-open');
-                hamBtn?.classList.remove('open');
-                backdrop?.classList.remove('open');
-            });
-            
-            // Sync mobile sidebar footer photo with topbar photo
-            const navImg = document.getElementById('nav-avatar-img');
-            const sbImg = document.getElementById('sb-footer-avatar-img');
-            if (navImg && sbImg) {
-                const observer = new MutationObserver(() => {
-                    if (navImg.src) sbImg.src = navImg.src;
-                });
-                observer.observe(navImg, { attributes: true, attributeFilter: ['src'] });
-            }
-        });
-    </script>
+    <script src="mobile-nav.js"></script>
 </body>
 </html>
