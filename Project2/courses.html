@@ -54,15 +54,15 @@
             </div>
 
             <div class="avatar-wrap" id="avatarBtn">
-                <img src="https://i.pravatar.cc/40?img=5" alt="Student">
+                <img src="https://i.pravatar.cc/40?img=5" alt="Student" class="js-user-avatar">
                 <div class="online-dot"></div>
             </div>
             <div class="profile-popup" id="profilePopup">
                 <div class="pp-header">
-                    <img src="https://i.pravatar.cc/40?img=5" alt="Student">
+                    <img src="https://i.pravatar.cc/40?img=5" alt="Student" class="js-user-avatar">
                     <div>
-                        <p class="pp-name">Amara Okafor</p>
-                        <p class="pp-role">Student</p>
+                        <p class="pp-name" id="popupName">Amara Okafor</p>
+                        <p class="pp-role" id="popupRole">Student</p>
                     </div>
                 </div>
                 <div class="pp-divider"></div>
@@ -157,6 +157,12 @@
 
             <!-- Course grid matching layout of original instructor courses grid -->
             <div class="course-grid" id="courseGrid"></div>
+            <div class="empty-state" id="emptyState" hidden>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+                </svg>
+                <p id="emptyStateText">No published courses yet — check back soon.</p>
+            </div>
         </div>
     </main>
 
