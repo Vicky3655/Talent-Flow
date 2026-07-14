@@ -3,114 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="profile.css">
-    <link rel="stylesheet" href="mobile-nav.css">
-    <link rel="stylesheet" href="student-nav.css">
     <link rel="stylesheet" href="courses.css">
-    <script type="module" src="auth.js"></script>
-    <script type="module" src="data-store.js"></script>
-    <script src="nav-avatar.js" defer></script>
-    <script src="courses.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-    <title>Courses — Talent Flow</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script type="module" src="auth.js"></script>
+    <title>Talent Flow – My Courses</title>
 </head>
-<body data-profile-page="student">
+<body>
 
-    <div id="toast-container"></div>
+    <!-- ── TOAST NOTIFICATIONS ── -->
+    <div id="toastContainer"></div>
 
-    <!-- ══ NAV ══ -->
+    <!-- ── NAV ── -->
     <nav>
         <div class="logo">
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
             </svg>
             <span>Talent Flow</span>
         </div>
-        <div class="nav-right">
-            <span class="nav-role">Student</span>
-            <div class="avatar">
-                <img id="nav-avatar-img" src="" alt="Profile">
+
+        <div class="nav-center">
+            <div class="breadcrumb">
+                <span class="bc-root">Dashboard</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                <span class="bc-current">My Courses</span>
             </div>
-            <button type="button" class="nav-logout-btn" id="logoutBtn">Log Out</button>
-            <button class="hamburger-btn" id="hamburger-btn" aria-label="Open navigation menu">
-                <span class="hb-bar hb-top"></span>
-                <span class="hb-bar hb-mid"></span>
-                <span class="hb-bar hb-bot"></span>
+        </div>
+
+        <div class="nav-right">
+            <!-- Notification bell -->
+            <button class="nav-icon-btn notif-btn" id="notifBtn" aria-label="Notifications">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"/>
+                </svg>
+                <span class="notif-badge" id="notifBadge">0</span>
             </button>
+
+            <!-- Notification dropdown -->
+            <div class="notif-panel" id="notifPanel">
+                <div class="np-header">
+                    <h4>Notifications</h4>
+                    <button class="np-clear" id="clearNotifs">Mark all read</button>
+                </div>
+                <div class="np-list" id="notifList">
+                    <p class="np-empty">No notifications yet</p>
+                </div>
+            </div>
+
+            <div class="avatar-wrap" id="avatarBtn">
+                <img src="https://i.pravatar.cc/40?img=5" alt="Student">
+                <div class="online-dot"></div>
+            </div>
+            <div class="profile-popup" id="profilePopup">
+                <div class="pp-header">
+                    <img src="https://i.pravatar.cc/40?img=5" alt="Student">
+                    <div>
+                        <p class="pp-name">Amara Okafor</p>
+                        <p class="pp-role">Student</p>
+                    </div>
+                </div>
+                <div class="pp-divider"></div>
+                <a href="#" class="pp-item">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    Profile
+                </a>
+                <a href="courses.html" class="pp-item">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M6 20.25h12m-7.5-3v3m3-3v3m-10.125-3h17.25c.621 0 1.125-.504 1.125-1.125V4.875c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125Z"/></svg>
+                    My Courses
+                </a>
+                <a href="settings.html" class="pp-item">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75a4.5 4.5 0 0 1-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 1 1-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 0 1 6.336-4.486l-3.276 3.276a3.004 3.004 0 0 0 2.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852Z"/></svg>
+                    Settings
+                </a>
+                <div class="pp-divider"></div>
+                <a href="#" class="pp-item" id="navLogoutLink">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75"/></svg>
+                    Log Out
+                </a>
+            </div>
         </div>
     </nav>
 
-    <!-- ══ SIDEBAR ══ -->
+    <!-- ── SIDEBAR (CONVERTS TO BOTTOM NAV ON MOBILE) ── -->
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <a href="../student-profile.html" class="sb-brand">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
-                </svg>
-                Talent Flow
-            </a>
-            <button class="sb-close-btn" aria-label="Close menu">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-            </button>
-        </div>
-
-        <span class="sb-section">Navigation</span>
-
-        <a href="../student-profile.html" class="sidebar-link" data-tip="My Profile" title="My Profile">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
-            </svg>
-            <span class="sb-label">My Profile</span>
+        <a href="student-dashboard.html" class="sidebar-link" data-tip="Dashboard">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         </a>
-
-        <a href="courses.html" class="sidebar-link active" data-tip="Courses" title="Courses">
+        <a href="courses.html" class="sidebar-link active" data-tip="Courses">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 20.25h12m-7.5-3v3m3-3v3m-10.125-3h17.25c.621 0 1.125-.504 1.125-1.125V4.875c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125Z"/>
             </svg>
-            <span class="sb-label">Courses</span>
         </a>
+        <a href="assignment.html" class="sidebar-link" data-tip="Assignments">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25M9 16.5v.75m3-3v3M15 12v5.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/>
+            </svg>
+        </a>
+        <a href="settings.html" class="sidebar-link" data-tip="Settings">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75a4.5 4.5 0 0 1-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 1 1-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 0 1 6.336-4.486l-3.276 3.276a3.004 3.004 0 0 0 2.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852Z"/>
+            </svg>
+        </a>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-        <div class="sb-footer">
-            <img src="" alt="Student" class="sb-footer-avatar" id="sbFooterAvatar">
-            <div class="sb-footer-info">
-                <div class="sb-footer-name" id="sbFooterName"></div>
-                <div class="sb-footer-role" id="sbFooterRole"></div>
+    <!-- ── MAIN CONTENT ── -->
+    <main class="content">
+        <div class="page-header">
+            <div>
+                <h1>My Learning Portal</h1>
+                <p class="page-sub">Access your course modules, materials, and track overall progress</p>
+            </div>
+            <div class="header-chips">
+                <div class="chip chip-ongoing" id="chipOngoing">
+                    <span class="chip-dot"></span>
+                    <span id="ongoingCount">0</span> Ongoing
+                </div>
+                <div class="chip chip-completed" id="chipCompleted">
+                    <span class="chip-dot"></span>
+                    <span id="completedCount">0</span> Completed
+                </div>
             </div>
         </div>
-    </aside>
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
-    <!-- ══ MAIN ══ -->
-    <main class="content">
-        <div class="scourses-shell">
-            <div class="scourses-head">
-                <div>
-                    <h1>Browse Courses</h1>
-                    <p class="scourses-sub">Find your next course and start learning.</p>
+        <div class="courses-panel">
+            <!-- Toolbar based on Instructors view -->
+            <div class="toolbar">
+                <div class="filters">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="ongoing">
+                        <span class="dot ongoing"></span> Ongoing
+                    </button>
+                    <button class="filter-btn" data-filter="completed">
+                        <span class="dot completed"></span> Completed
+                    </button>
                 </div>
-                <div class="scourses-search">
+                <div class="search-wrap">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                     </svg>
-                    <input type="text" id="courseSearch" placeholder="Search courses or instructors…">
+                    <input type="text" id="searchInput" placeholder="Search my courses…">
                 </div>
+                <button class="sort-btn" id="sort-btn">
+                    Sort A–Z
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                    </svg>
+                </button>
             </div>
 
-            <div class="scourse-grid" id="courseGrid"></div>
-
-            <div class="scourses-empty" id="emptyState" hidden>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 20.25h12m-7.5-3v3m3-3v3m-10.125-3h17.25c.621 0 1.125-.504 1.125-1.125V4.875c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125Z" />
-                </svg>
-                <p id="emptyStateText">No published courses yet — check back soon.</p>
-            </div>
+            <!-- Course grid matching layout of original instructor courses grid -->
+            <div class="course-grid" id="courseGrid"></div>
         </div>
     </main>
 
-    <script src="mobile-nav.js"></script>
+    <!-- ── COURSE MATERIALS SLIDING DRAWER ── -->
+    <div class="drawer" id="materials-drawer">
+        <div class="drawer-inner">
+            <div class="drawer-header">
+                <h3 id="drawer-title">Course Materials</h3>
+                <button class="close-btn" id="drawer-close">&times;</button>
+            </div>
+            <p class="drawer-subtitle" id="drawer-subtitle"></p>
+
+            <div class="drawer-tabs">
+                <button class="drawer-tab active" data-dtab="materials">Materials</button>
+                <button class="drawer-tab" data-dtab="syllabus">Syllabus Progress</button>
+            </div>
+
+            <div class="drawer-tab-pane active" id="dtab-materials">
+                <p class="tab-pane-tip">Click on any file below to download and view references.</p>
+                <div class="drawer-files" id="drawer-files"></div>
+            </div>
+
+            <div class="drawer-tab-pane" id="dtab-syllabus">
+                <div class="progress-info-container">
+                    <div class="progress-status-row">
+                        <span>Course Completion</span>
+                        <strong id="drawerProgressText">0%</strong>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="drawerProgressBar" style="width: 0%;"></div>
+                    </div>
+                </div>
+                <div class="lessons-list" id="drawer-lessons-list"></div>
+            </div>
+        </div>
+    </div>
+    <div class="drawer-backdrop" id="drawer-backdrop"></div>
+
+    <!-- ── LESSON INTERACTIVE MODAL ── -->
+    <div class="modal" id="lessonModal">
+        <div class="modal-box">
+            <button class="modal-close" id="lessonModalClose">&times;</button>
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2 id="lessonModalTitle">Lesson Details</h2>
+                    <p id="lessonModalCourse" class="modal-sub"></p>
+                </div>
+            </div>
+            <div class="lesson-content">
+                <p id="lessonModalDesc"></p>
+                <div class="lesson-attachment-section">
+                    <h4>Attached Video Reference</h4>
+                    <div class="video-placeholder">
+                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        <span>Interactive Lesson Video (Play)</span>
+                    </div>
+                </div>
+            </div>
+            <button class="submit-btn" id="markLessonCompleteBtn">Mark Lesson as Complete</button>
+        </div>
+    </div>
+
+    <script src="courses.js"></script>
 </body>
 </html>
