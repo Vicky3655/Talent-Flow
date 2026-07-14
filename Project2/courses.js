@@ -16,7 +16,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const auth = window.TalentFlowAuth;
     if (!auth) return;
 
-    await auth.requireAuth(); // redirects to login.html if signed out
+    const user = await auth.requireAuth(); // redirects to login.html if signed out
+
+    initUserMenu(auth);          // wire up avatar dropdown + logout link
+    renderUserMenu(auth, user);  // fill in real name/avatar/role (fire-and-forget)
 
     try {
         const [courses, enrollments] = await Promise.all([
@@ -32,9 +35,60 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     render();
     initSearch();
-
-    document.getElementById('logoutBtn')?.addEventListener('click', () => auth.logOut());
 });
+
+/* ── NAV: SIGNED-IN USER MENU ─────────────────────────────────
+   auth.js's Firebase `user` object only carries displayName/email —
+   avatar and role live in the Firestore profile doc instead, so
+   that gets loaded here and used to replace the placeholder
+   "Amara Okafor" markup in the nav avatar + profile popup. ────── */
+async function renderUserMenu(auth, user) {
+    let profile = null;
+    try {
+        profile = await auth.loadProfile(user.uid);
+    } catch (err) {
+        console.error('Loading profile for nav failed (continuing with fallback):', err);
+    }
+
+    const name = (profile && profile.fullName) || user.displayName || 'Student';
+    const role = (profile && profile.role) || 'Student';
+    const avatar = (profile && profile.avatar) || auth.initialsAvatar(name);
+
+    document.querySelectorAll('.js-user-avatar').forEach((img) => {
+        img.src = avatar;
+        img.alt = name;
+    });
+    const nameEl = document.getElementById('popupName');
+    const roleEl = document.getElementById('popupRole');
+    if (nameEl) nameEl.textContent = name;
+    if (roleEl) roleEl.textContent = role;
+}
+
+// Toggles the profile popup open/closed and wires the real sign-out
+// action onto the "Log Out" link (it previously targeted a #logoutBtn
+// id that doesn't exist anywhere in courses.html, so it never fired).
+function initUserMenu(auth) {
+    const avatarBtn = document.getElementById('avatarBtn');
+    const profilePopup = document.getElementById('profilePopup');
+
+    avatarBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profilePopup?.classList.toggle('open');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (profilePopup?.classList.contains('open')
+            && !profilePopup.contains(e.target)
+            && !avatarBtn?.contains(e.target)) {
+            profilePopup.classList.remove('open');
+        }
+    });
+
+    document.getElementById('navLogoutLink')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        auth.logOut();
+    });
+}
 
 function initSearch() {
     const input = document.getElementById('courseSearch');
@@ -126,7 +180,7 @@ async function enroll(courseId, btn) {
 
 /* ── TOAST ─────────────────────────────────────────────────── */
 function showToast(title, msg, type = 'success') {
-    const container = document.getElementById('toast-container');
+    const container = document.getElementById('toastContainer');
     if (!container) return;
     const el = document.createElement('div');
     el.className = 'toast';
