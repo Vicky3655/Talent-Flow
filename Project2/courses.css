@@ -725,6 +725,10 @@ nav {
 }
 .toast.toast-success { background: var(--green); }
 .toast.toast-info { background: var(--blue); }
+.toast-icon { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.toast-title { font-weight: 700; margin-bottom: 2px; }
+.toast-msg { font-size: 12px; color: rgba(255,255,255,0.85); }
+.toast.exit { animation: toastOut 0.3s ease forwards; }
 
 /* Empty state styling */
 .empty-state {
