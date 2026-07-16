@@ -119,6 +119,24 @@ function publicSlice(data) {
   return out;
 }
 
+// A further, narrower slice — STUDENT accounts only — kept in its own
+// studentDirectory/{uid} doc so an instructor can look up an already-
+// registered student by typing their email (see students.html's "add
+// student" flow). Deliberately separate from publicProfiles above:
+// publicProfiles is readable broadly across the app (course cards, nav)
+// and intentionally excludes email; this collection exists only so an
+// instructor can resolve "is this email a real student, and who is it,"
+// without ever being able to read that student's private users/{uid} doc.
+const STUDENT_DIRECTORY_FIELDS = ['fullName', 'avatar', 'email'];
+
+function studentDirectorySlice(data) {
+  const out = {};
+  STUDENT_DIRECTORY_FIELDS.forEach((key) => {
+    if (data[key]) out[key] = data[key];
+  });
+  return out;
+}
+
 async function saveProfile(uid, data) {
   await withTimeout(setDoc(doc(db, 'users', uid), data, { merge: true }));
   cachedProfile = { ...(cachedProfile || {}), ...data };
@@ -131,6 +149,21 @@ async function saveProfile(uid, data) {
       console.error('Public profile sync failed (continuing anyway):', err);
     });
   }
+
+  // Keep the student lookup directory current too — built off the full
+  // merged profile (not just this patch), so a save that only touches
+  // e.g. the avatar doesn't blank out email/fullName in the directory.
+  // Only Students get an entry; instructors are never listed here.
+  if (cachedProfile.role === 'Student') {
+    const directoryPatch = studentDirectorySlice(cachedProfile);
+    if (directoryPatch.email) {
+      directoryPatch.emailLower = directoryPatch.email.toLowerCase();
+      withTimeout(setDoc(doc(db, 'studentDirectory', uid), directoryPatch, { merge: true })).catch((err) => {
+        console.error('Student directory sync failed (continuing anyway):', err);
+      });
+    }
+  }
+
   return data;
 }
 
@@ -139,6 +172,22 @@ async function loadProfile(uid) {
   const data = snap.exists() ? snap.data() : null;
   cachedProfile = data;
   return data;
+}
+
+/* ── STUDENT LOOKUP (Firestore) ──────────────────────────────
+   Used by students.html's "Add Student" flow — an instructor types
+   an email and this resolves whether it belongs to an already-
+   registered Student account, via the studentDirectory synced
+   above. A miss is a perfectly normal outcome (they just haven't
+   signed up yet), so this resolves to null rather than throwing. */
+async function findStudentByEmailDoc(email) {
+  const emailLower = String(email || '').trim().toLowerCase();
+  if (!emailLower) return null;
+  const q = query(collection(db, 'studentDirectory'), where('emailLower', '==', emailLower));
+  const snap = await withTimeout(getDocs(q));
+  if (snap.empty) return null;
+  const found = snap.docs[0];
+  return { uid: found.id, ...found.data() };
 }
 
 /* ── AVATAR PHOTOS (Firebase Storage) ─────────────────────────
@@ -352,6 +401,10 @@ window.TalentFlowAuth = {
   // Profile
   saveProfile,
   loadProfile,
+  // Looks up a registered STUDENT account by email — used by the
+  // instructor-side "Add Student" flow (students.html/students.js) to
+  // recognize an already-registered student while typing an invite.
+  findStudentByEmail: findStudentByEmailDoc,
   // Same as saveProfile, but for the currently signed-in user — used by
   // pages (like settings.js) that don't already have the uid handy.
   saveUserProfile(data) {
