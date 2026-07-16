@@ -353,6 +353,14 @@ const BASE_LINK    = 'https://talentflow.app/join/';
     const btnDone        = document.getElementById('btnDone');
     const modalTabsEl    = document.querySelector('.modal-tabs');
 
+    // Student-lookup preview panel (registered-student chip → profile + email)
+    const panelStudentPreview = document.getElementById('panelStudentPreview');
+    const backToRecipients    = document.getElementById('backToRecipients');
+    const previewAvatar       = document.getElementById('previewAvatar');
+    const previewName         = document.getElementById('previewName');
+    const previewEmail        = document.getElementById('previewEmail');
+    const previewEmailBtn     = document.getElementById('previewEmailBtn');
+
     let chips               = [];
     let activeTab           = 'email';
     let emailCourseSelected = [];
@@ -394,6 +402,7 @@ const BASE_LINK    = 'https://talentflow.app/join/';
         successPanel.classList.remove('visible');
         panelEmail.classList.remove('hidden');
         panelLink.classList.add('hidden');
+        panelStudentPreview.classList.add('hidden');
         modalTabsEl.style.display = '';
         footerWrap.style.display  = '';
         btnSend.style.display     = '';
@@ -425,39 +434,140 @@ const BASE_LINK    = 'https://talentflow.app/join/';
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
     }
 
+    // Each chip tracks whether its email belongs to an already-registered
+    // student account: 'checking' while the lookup is in flight, then
+    // 'registered' (with their profile attached) or 'unregistered'.
     function addChip(raw) {
         const email = raw.trim().replace(/,+$/, '');
         if (!email) return;
         if (!isValidEmail(email)) { shakeChipInput(); return; }
-        if (chips.includes(email)) { emailTyping.value = ''; return; }
-        chips.push(email);
+        if (chips.some(c => c.email === email)) { emailTyping.value = ''; return; }
+
+        const entry = { email, status: 'checking', profile: null };
+        chips.push(entry);
         renderChips();
         emailTyping.value = '';
         chipInput.classList.remove('empty');
         updateSendBtn();
+
+        lookupStudent(entry);
+    }
+
+    // Resolves whether `entry.email` already belongs to a registered
+    // student — see auth.js's studentDirectory sync. A miss just means
+    // this is a brand-new invite, which is the ordinary case, not an error.
+    async function lookupStudent(entry) {
+        try {
+            const found = window.TalentFlowAuth?.findStudentByEmail
+                ? await window.TalentFlowAuth.findStudentByEmail(entry.email)
+                : null;
+            entry.status  = found ? 'registered' : 'unregistered';
+            entry.profile = found || null;
+        } catch (err) {
+            console.error('Student lookup failed for', entry.email, err);
+            entry.status = 'unregistered'; // fail open to a plain invite chip
+        }
+        // The chip may have been removed (or the modal reset) while this
+        // was in flight — only re-render if it's still a current recipient.
+        if (chips.includes(entry)) renderChips();
     }
 
     function removeChip(email) {
-        chips = chips.filter(c => c !== email);
+        chips = chips.filter(c => c.email !== email);
         renderChips();
         chipInput.classList.toggle('empty', chips.length === 0);
         updateSendBtn();
         emailTyping.focus();
     }
 
+    function chipAvatarSrc(entry) {
+        if (entry.profile?.avatar) return entry.profile.avatar;
+        const label = entry.profile?.fullName || entry.email;
+        return window.TalentFlowAuth?.initialsAvatar ? window.TalentFlowAuth.initialsAvatar(label) : '';
+    }
+
+    // Built with DOM calls (not innerHTML) for the name/email parts —
+    // those can come from a student's own Firestore profile, so they're
+    // set via textContent rather than interpolated into markup.
     function renderChips() {
         chipInput.querySelectorAll('.chip').forEach(c => c.remove());
-        chips.forEach(email => {
+        chips.forEach(entry => {
             const div = document.createElement('div');
-            div.className = 'chip';
-            div.innerHTML = `${email}<button class="chip-x" type="button" aria-label="Remove ${email}">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                </svg></button>`;
-            div.querySelector('.chip-x').addEventListener('click', () => removeChip(email));
+            div.className = 'chip' + (entry.status === 'registered' ? ' chip-registered' : '');
+
+            if (entry.status === 'checking') {
+                const spinner = document.createElement('span');
+                spinner.className = 'chip-spinner';
+                div.appendChild(spinner);
+            } else if (entry.status === 'registered') {
+                const img = document.createElement('img');
+                img.className = 'chip-avatar';
+                img.src = chipAvatarSrc(entry);
+                img.alt = '';
+                div.appendChild(img);
+            }
+
+            const label = document.createElement('span');
+            label.className = 'chip-label';
+            label.textContent = (entry.status === 'registered' && entry.profile?.fullName) ? entry.profile.fullName : entry.email;
+            div.appendChild(label);
+
+            if (entry.status === 'registered') {
+                div.insertAdjacentHTML('beforeend', `<svg class="chip-badge" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>`);
+            }
+
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'chip-x';
+            removeBtn.setAttribute('aria-label', `Remove ${entry.email}`);
+            removeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>`;
+            removeBtn.addEventListener('click', (e) => { e.stopPropagation(); removeChip(entry.email); });
+            div.appendChild(removeBtn);
+
+            if (entry.status === 'registered') {
+                div.title = `View ${entry.profile?.fullName || 'profile'} & send an email`;
+                div.tabIndex = 0;
+                div.setAttribute('role', 'button');
+                div.addEventListener('click', () => openStudentPreview(entry));
+                div.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openStudentPreview(entry); }
+                });
+            }
+
             chipInput.insertBefore(div, emailTyping);
         });
     }
+
+    // Swaps the recipients panel for a read-only profile card — this is
+    // the "press the email address to access the student's profile and
+    // send them an email" flow, only ever offered for chips that already
+    // matched a registered account.
+    function openStudentPreview(entry) {
+        const name = entry.profile?.fullName || entry.email;
+        previewAvatar.src = chipAvatarSrc(entry);
+        previewAvatar.alt = name;
+        previewName.textContent  = name;
+        previewEmail.textContent = entry.email;
+
+        const subject = encodeURIComponent('Talent Flow — a message from your instructor');
+        const body    = document.getElementById('personalMsg').value.trim();
+        previewEmailBtn.href = `mailto:${entry.email}?subject=${subject}` + (body ? `&body=${encodeURIComponent(body)}` : '');
+
+        panelEmail.classList.add('hidden');
+        panelLink.classList.add('hidden');
+        panelStudentPreview.classList.remove('hidden');
+        modalTabsEl.style.display = 'none';
+        footerWrap.style.display  = 'none';
+    }
+
+    function closeStudentPreview() {
+        panelStudentPreview.classList.add('hidden');
+        modalTabsEl.style.display = '';
+        footerWrap.style.display  = '';
+        switchTab(activeTab);
+    }
+
+    backToRecipients.addEventListener('click', closeStudentPreview);
 
     function shakeChipInput() {
         chipInput.style.borderColor = '#EF4444';
@@ -472,7 +582,7 @@ const BASE_LINK    = 'https://talentflow.app/join/';
 
     emailTyping.addEventListener('keydown', e => {
         if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); addChip(emailTyping.value); }
-        if (e.key === 'Backspace' && !emailTyping.value && chips.length) removeChip(chips[chips.length - 1]);
+        if (e.key === 'Backspace' && !emailTyping.value && chips.length) removeChip(chips[chips.length - 1].email);
     });
     emailTyping.addEventListener('paste', () => {
         setTimeout(() => { emailTyping.value.split(/[\s,;]+/).forEach(addChip); emailTyping.value = ''; }, 0);
@@ -582,7 +692,7 @@ const BASE_LINK    = 'https://talentflow.app/join/';
         if (chips.length === 0) return;
 
         isSending = true;
-        const emailList   = [...chips];
+        const emailList   = chips.map(c => c.email);
         const courseNames = emailCourseSelected.map(i => COURSES[i]);
         const message     = document.getElementById('personalMsg').value.trim();
         const isDemo      = EJS_KEY === 'YOUR_PUBLIC_KEY';
