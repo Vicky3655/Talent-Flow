@@ -693,6 +693,13 @@ nav {
 }
 .chip-input.empty { border-color: var(--slate-2); }
 
+.chip-input-hint {
+    font-size: 11.5px;
+    color: var(--slate-4);
+    margin-top: 8px;
+    line-height: 1.5;
+}
+
 .chip {
     display: inline-flex; align-items: center; gap: 5px;
     background: var(--blue-l); color: var(--blue-d);
@@ -713,6 +720,49 @@ nav {
 }
 .chip-x:hover { color: var(--blue); }
 .chip-x svg { width: 12px; height: 12px; }
+
+/* Chip states for the "add student" lookup — checking / already
+   registered. A plain chip (no extra class) is just a fresh invite. */
+.chip-spinner {
+    width: 12px; height: 12px;
+    border: 2px solid #BFDBFE;
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: spin .65s linear infinite;
+}
+
+.chip-avatar {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: #fff;
+}
+
+.chip-label {
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.chip-badge {
+    width: 12px; height: 12px;
+    color: #16A34A;
+    flex-shrink: 0;
+}
+
+.chip-registered {
+    background: var(--green-l);
+    color: #15803D;
+    cursor: pointer;
+    transition: box-shadow .15s, transform .1s;
+}
+.chip-registered:hover { box-shadow: 0 0 0 2px rgba(22,163,74,.18); }
+.chip-registered:active { transform: scale(.97); }
+.chip-registered .chip-x { color: #86EFAC; }
+.chip-registered .chip-x:hover { color: #15803D; }
 
 .chip-cursor {
     border: none; outline: none;
@@ -813,6 +863,83 @@ nav {
     margin-bottom: 20px;
 }
 .link-note svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 1px; color: var(--slate-3); }
+
+/* ── Student preview panel ──
+   Shown in place of the recipients list when a chip that's already a
+   registered student is clicked. */
+.back-to-recipients {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: none; border: none; cursor: pointer;
+    color: var(--slate-5); font-size: 13px; font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    padding: 0; margin-bottom: 18px;
+    transition: color .15s;
+}
+.back-to-recipients:hover { color: var(--blue); }
+.back-to-recipients svg { width: 15px; height: 15px; }
+
+.student-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 4px 8px 8px;
+}
+
+.student-preview-avatar {
+    width: 76px; height: 76px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--blue-l);
+    border: 3px solid var(--slate-1);
+    margin-bottom: 14px;
+}
+
+.student-preview-name {
+    font-size: 17px; font-weight: 800;
+    color: var(--slate-9);
+}
+
+.student-preview-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    margin-top: 8px;
+    padding: 4px 12px;
+    background: var(--green-l);
+    color: #15803D;
+    font-size: 11.5px; font-weight: 700;
+    border-radius: 20px;
+}
+.student-preview-badge svg { width: 11px; height: 11px; }
+
+.student-preview-email {
+    margin-top: 10px;
+    font-size: 13.5px;
+    color: var(--slate-5);
+}
+
+.student-preview-send-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 20px;
+    padding: 11px 26px;
+    background: var(--blue); color: #fff;
+    border-radius: 10px;
+    font-size: 14px; font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background .18s, transform .12s, box-shadow .18s;
+}
+.student-preview-send-btn:hover {
+    background: var(--blue-d);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(37,99,235,.35);
+}
+.student-preview-send-btn svg { width: 16px; height: 16px; }
+
+.student-preview-hint {
+    margin-top: 10px;
+    font-size: 11.5px;
+    color: var(--slate-4);
+}
 
 /* ── Footer ── */
 .modal-divider { height: 1px; background: var(--slate-1); margin: 0; }
